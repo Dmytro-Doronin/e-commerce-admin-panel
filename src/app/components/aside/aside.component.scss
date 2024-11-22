@@ -9,3 +9,43 @@
   height: 100%;
   background-color: var(--color-light-100);
 }
+.admin-info {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+}
+.admin-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+}
+
+.admin-name {
+  margin-bottom: 5px;
+}
+
+.admin-email {
+  font: 400 14px/20px Roboto,sans-serif;
+  color: var(--color-grey);
+}
+.icon {
+  color: var(--color-grey);
+  margin-right: 20px;
+}
+.line {
+  width: 100%;
+  color: var(--color-grey);
+  opacity: 0.5;
+}
+
+.block-title {
+  padding: 20px;
+  font: 400 16px/20px Roboto,sans-serif;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+}
