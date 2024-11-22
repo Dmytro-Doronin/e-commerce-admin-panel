@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import {MatButtonModule} from '@angular/material/button';
-import {MatToolbar, MatToolbarModule} from '@angular/material/toolbar';
+import {HeaderComponent} from './components/header/header.component';
+import {AsideComponent} from './components/aside/aside.component';
 @Component({
   selector: 'app-root',
-  imports: [ MatToolbar, MatToolbarModule, MatButtonModule],
   standalone: true,
   templateUrl: './app.component.html',
+  imports: [
+    HeaderComponent,
+    AsideComponent
+  ],
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
