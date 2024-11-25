@@ -1,14 +1,11 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {HeaderComponent} from './components/header/header.component';
-import {AsideComponent} from './components/aside/aside.component';
+
+import {RouterOutlet} from '@angular/router';
 @Component({
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
-  imports: [
-    HeaderComponent,
-    AsideComponent
-  ],
+  imports: [RouterOutlet],
   styleUrl: './app.component.scss'
 })
 export class AppComponent {

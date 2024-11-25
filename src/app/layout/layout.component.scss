@@ -1,0 +1,21 @@
+.layout {
+  //display: grid;
+  //grid-template-areas:
+  //  "header header"
+  //  "aside main";
+  //grid-template-columns: 239px 1fr;
+  //grid-template-rows: auto 1fr;
+  overflow-y: hidden;
+}
+
+.content-wrapper {
+  display: grid;
+  grid-template-columns: 239px 1fr;
+  height: calc(100vh - 64px);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.main-content {
+  padding: 10px;
+}
