@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
+import {ProductsService} from '../../services/product.service';
+import {Product} from '../../interfaces/products.interface';
 
 @Component({
   selector: 'app-products-page',
@@ -8,5 +10,7 @@ import { Component } from '@angular/core';
   styleUrl: './products-page.component.scss'
 })
 export class ProductsPageComponent {
-
+  private graphQLService = inject(ProductsService)
+  products = signal<Product[]>([])
 }
+

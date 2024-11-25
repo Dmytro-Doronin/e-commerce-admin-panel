@@ -4,7 +4,7 @@ import { Apollo, gql } from 'apollo-angular';
 @Injectable({
   providedIn: 'root',
 })
-export class GraphQLService {
+export class ProductsService {
   constructor(private apollo: Apollo) {}
 
   getProducts() {
@@ -25,8 +25,8 @@ export class GraphQLService {
       }
     `
 
-    return this.apollo.query({
+    return this.apollo.watchQuery({
       query: GET_PRODUCTS,
-    })
+    }).valueChanges
   }
 }

@@ -1,9 +1,7 @@
-<ul>
-  @for (let item of items; track item.name) {
-  <li>{{ item.name }}</li>
-  }
-  @empty {
-  <li>There are no items.</li>
-  }
-</ul>
+@for (column of columns(); track column) {
+  <tr>
+    <app-table-cell [value]="rowData[column]"></app-table-cell>
+  </tr>
+}
+
 
