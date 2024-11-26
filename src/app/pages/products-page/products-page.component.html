@@ -1,1 +1,7 @@
-<p>products-page works!</p>
+@if (products(); as products) {
+
+  @for (product of products; track product.id) {
+    <div>{{product.id}}</div>
+  }
+
+}

@@ -1,4 +1,5 @@
 
+
 interface ICategory {
   id: string;
   name: string;
@@ -12,4 +13,8 @@ export interface Product {
   description: string;
   image: string[];
   category: ICategory;
+}
+
+export interface ResponseProducts {
+  products: Product[];
 }
