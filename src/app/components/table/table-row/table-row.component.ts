@@ -14,6 +14,6 @@ import {NgFor, NgIf} from '@angular/common';
   styleUrl: './table-row.component.scss'
 })
 export class TableRowComponent {
-  rowData = input<{ [key: string]: any }>({})
+  // rowData = input<{ [key: string]: any }>({})
   columns = input<string[]>([])
 }

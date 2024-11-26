@@ -1,7 +1,26 @@
 @if (products(); as products) {
-
-  @for (product of products; track product.id) {
-    <div>{{product.id}}</div>
+  @if (productsTittles(); as productsTittles) {
+    <table>
+      <thead>
+      <tr>
+        @for (productsTittle of productsTittles; track productsTittle) {
+          <td>{{productsTittle}}</td>
+        }
+      </tr>
+      </thead>
+      <tbody>
+        @for (product of products; track product.id) {
+          <tr>
+            <td>{{product.id}}</td>
+            <td>{{product.title}}</td>
+            <td>{{product.price}}</td>
+            <td>
+              <app-images-array-component [rawImageArray]="product.images"></app-images-array-component>
+            </td>
+            <td>{{product.category.name}}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
   }
-
 }
