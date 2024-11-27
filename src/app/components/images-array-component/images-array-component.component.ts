@@ -14,11 +14,13 @@ export class ImagesArrayComponentComponent {
     const rawArray = this.rawImageArray();
     if (rawArray && rawArray.length > 0) {
       try {
-        const cleanJson = rawArray[0]
-          .replace(/^[\[\]\s]+|[\[\]\s]+$/g, '')
-          .replace(/,\s*$/, '');
-        const correctedJson = `[${cleanJson}]`;
-        return JSON.parse(correctedJson);
+        if (Array.isArray(rawArray)) {
+          return rawArray
+        }
+
+        const jsonString = (rawArray[0] as string).trim();
+
+        return JSON.parse(jsonString)
       } catch (error) {
         console.error('Ошибка разбора JSON:', error, rawArray[0]);
       }

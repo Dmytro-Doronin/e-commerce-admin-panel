@@ -1,19 +1,39 @@
 import {Component, input} from '@angular/core';
 import {TableCellComponent} from '../table-cell/table-cell.component';
-import {NgFor, NgIf} from '@angular/common';
+import {ImagesArrayComponentComponent} from '../../images-array-component/images-array-component.component';
 
 @Component({
   selector: 'app-table-row',
   imports: [
     TableCellComponent,
-    NgFor,
-    NgIf
+    ImagesArrayComponentComponent,
   ],
   standalone: true,
   templateUrl: './table-row.component.html',
   styleUrl: './table-row.component.scss'
 })
 export class TableRowComponent {
-  // rowData = input<{ [key: string]: any }>({})
+  rowData = input<{ [key: string]: any }>({})
   columns = input<string[]>([])
+
+  getColumnValue(column: string): any {
+      const data = this.rowData()
+      if (!data) return '';
+
+      const value = column.split('.').reduce((acc, key) => acc && acc[key], data);
+
+      if (column === 'images' && Array.isArray(value)) {
+        return value.map((image) => {
+          try {
+            // Попытка распарсить строку как JSON, если она имеет обёрнутые кавычки
+            return JSON.parse(image);
+          } catch {
+            // Если JSON.parse не нужен, возвращаем как есть
+            return image;
+          }
+        });
+      }
+
+      return value || '';
+  }
 }

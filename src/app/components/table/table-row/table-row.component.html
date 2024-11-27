@@ -1,7 +1,14 @@
-@for (column of columns(); track column) {
-  <tr>
-    <app-table-cell [value]="rowData[column]"></app-table-cell>
-  </tr>
-}
+<tr>
+  @for (column of columns(); track column) {
+    @if (column === 'images') {
+      <td>
+
+        <app-images-array-component [rawImageArray]="getColumnValue(column)"></app-images-array-component>
+      </td>
+    } @else {
+        <app-table-cell [value]="getColumnValue(column)"></app-table-cell>
+    }
+  }
+</tr>
 
 

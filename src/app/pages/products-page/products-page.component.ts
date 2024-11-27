@@ -2,11 +2,30 @@ import {Component, effect, inject, OnDestroy, OnInit, Signal, signal} from '@ang
 import {ProductsService} from '../../services/product.service';
 import {Product} from '../../interfaces/products.interface';
 import {ImagesArrayComponentComponent} from '../../components/images-array-component/images-array-component.component';
+import {TableRowComponent} from '../../components/table/table-row/table-row.component';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
+  MatTable, MatTableModule
+} from '@angular/material/table';
+import {MatButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-products-page',
   imports: [
-    ImagesArrayComponentComponent
+    MatTableModule,
+    MatTable,
+    MatHeaderCell,
+    MatColumnDef,
+    MatCell,
+    MatHeaderRow,
+    MatRow,
+    ImagesArrayComponentComponent,
+    MatButton,
   ],
   standalone: true,
   templateUrl: './products-page.component.html',
@@ -23,6 +42,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   constructor() {
     effect(() => {
       console.log('Updated titles:', this.productsTittles());
+      console.log('Updated зкщвгсеы:', this.products());
     });
   }
 
@@ -31,7 +51,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     console.log(this.productsTittles())
   }
 
-
+  handleAction(id: string) {
+    console.log(id)
+  }
 
   ngOnDestroy() {
     this.productService.resetState()

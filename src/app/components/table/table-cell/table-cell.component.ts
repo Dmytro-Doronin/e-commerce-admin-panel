@@ -1,9 +1,9 @@
 import {Component, input} from '@angular/core';
-import {NgFor, NgIf} from '@angular/common';
+
 
 @Component({
   selector: 'app-table-cell',
-  imports: [NgFor, NgIf],
+  imports: [],
   standalone: true,
   templateUrl: './table-cell.component.html',
   styleUrl: './table-cell.component.scss'

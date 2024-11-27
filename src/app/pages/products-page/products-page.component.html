@@ -1,26 +1,59 @@
 @if (products(); as products) {
   @if (productsTittles(); as productsTittles) {
-    <table>
-      <thead>
-      <tr>
-        @for (productsTittle of productsTittles; track productsTittle) {
-          <td>{{productsTittle}}</td>
-        }
-      </tr>
-      </thead>
-      <tbody>
-        @for (product of products; track product.id) {
-          <tr>
-            <td>{{product.id}}</td>
-            <td>{{product.title}}</td>
-            <td>{{product.price}}</td>
-            <td>
-              <app-images-array-component [rawImageArray]="product.images"></app-images-array-component>
-            </td>
-            <td>{{product.category.name}}</td>
-          </tr>
-        }
-      </tbody>
+
+    <table mat-table [dataSource]="products" class="mat-elevation-z8">
+
+      @for (title of productsTittles; track title) {
+        <ng-container [matColumnDef]="title">
+          <th mat-header-cell *matHeaderCellDef>{{title}}</th>
+          <td mat-cell *matCellDef="let element">
+            @if (title === 'images') {
+              <app-images-array-component [rawImageArray]="element[title]"></app-images-array-component>
+            } @else {
+              {{ title === 'category' ? element[title]?.name : element[title] }}
+            }
+          </td>
+        </ng-container>
+
+      }
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button (click)="handleAction(element.id)">Action for {{ element.id }}</button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="productsTittles.concat(['actions'])"></tr>
+      <tr mat-row *matRowDef="let row; columns: productsTittles.concat(['actions']);"></tr>
+
     </table>
   }
 }
+
+<!--    <table>-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--        @for (productsTittle of productsTittles; track productsTittle) {-->
+<!--          <td>{{productsTittle}}</td>-->
+<!--        }-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody class="tbody">-->
+<!--        @for (product of products; track product.id) {-->
+<!--          <tr>-->
+<!--            <td>{{product.id}}</td>-->
+<!--            <td>{{product.title}}</td>-->
+<!--            <td>{{product.price}}</td>-->
+<!--            <td class="images-wrapper">-->
+<!--              <app-images-array-component [rawImageArray]="product.images"></app-images-array-component>-->
+<!--            </td>-->
+<!--            <td>{{product.category.name}}</td>-->
+<!--          </tr>-->
+<!--        }-->
+<!--              @for (product of products; track product.id) {-->
+<!--                <app-table-row-->
+<!--                  [rowData]="product"-->
+<!--                  [columns]="productsTittles">-->
+<!--                </app-table-row>-->
+<!--              }-->
+
+<!--      </tbody>-->
