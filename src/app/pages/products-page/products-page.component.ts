@@ -13,6 +13,7 @@ import {
   MatTable, MatTableModule
 } from '@angular/material/table';
 import {MatButton} from '@angular/material/button';
+import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-products-page',
@@ -26,6 +27,7 @@ import {MatButton} from '@angular/material/button';
     MatRow,
     ImagesArrayComponentComponent,
     MatButton,
+    MatPaginatorModule
   ],
   standalone: true,
   templateUrl: './products-page.component.html',
@@ -35,8 +37,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   private productService = inject(ProductsService)
   products: Signal<Product[]> = this.productService.products
   productsTittles: Signal<string[]> = this.productService.tableHeads
+  productsCount: Signal<number> = this.productService.countProducts
 
-  private limit = 10
+  private limit = 15
   private offset = 0
 
   constructor() {
@@ -48,7 +51,14 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.productService.loadProducts(this.limit, this.offset)
-    console.log(this.productsTittles())
+    this.productService.loadAllProducts()
+  }
+
+  onPageChange(event: PageEvent) {
+    this.offset = event.pageIndex * 15
+    this.limit = event.pageSize
+
+    this.productService.loadProducts(this.limit, this.offset)
   }
 
   handleAction(id: string) {

@@ -5,18 +5,15 @@ import { routes } from './app.routes'
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { provideHttpClient } from '@angular/common/http'
 import { provideApollo } from 'apollo-angular'
-import { HttpLink } from 'apollo-angular/http'
-import { InMemoryCache } from '@apollo/client/core'
+
+import {apolloConfig} from '../apollo.config';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideAnimationsAsync(), provideHttpClient(), provideApollo(() => {
-      const httpLink = inject(HttpLink)
-
-      return {
-        link: httpLink.create({
-          uri: 'https://api.escuelajs.co/graphql',
-        }),
-        cache: new InMemoryCache(),
-      };
-    })]
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideAnimationsAsync(),
+    provideHttpClient(),
+    provideApollo(apolloConfig)
+  ]
 };
