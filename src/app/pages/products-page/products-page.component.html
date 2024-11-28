@@ -1,12 +1,13 @@
+
 @if (products(); as products) {
   @if (productsTittles(); as productsTittles) {
 
-    <table mat-table [dataSource]="products" class="mat-elevation-z8">
+    <table mat-table [dataSource]="products" class="mat-elevation-z8 table">
 
       @for (title of productsTittles; track title) {
         <ng-container [matColumnDef]="title">
-          <th mat-header-cell *matHeaderCellDef>{{title}}</th>
-          <td mat-cell *matCellDef="let element">
+          <th class="row" mat-header-cell *matHeaderCellDef>{{title}}</th>
+          <td class="row" mat-cell *matCellDef="let element">
             @if (title === 'images') {
               <app-images-array-component [rawImageArray]="element[title]"></app-images-array-component>
             } @else {
@@ -30,13 +31,14 @@
 
     <mat-paginator
       [length]="productsCount()"
-      [pageSize]="15"
+      [pageSize]="limit"
       (page)="onPageChange($event)"
+      class="pagination"
     >
     </mat-paginator>
   }
-
 }
+
 
 <!--    <table>-->
 <!--      <thead>-->

@@ -15,14 +15,19 @@ export class ImagesArrayComponentComponent {
     if (rawArray && rawArray.length > 0) {
       try {
         if (Array.isArray(rawArray)) {
-          return rawArray
+          return rawArray.map((item) => {
+            try {
+              return JSON.parse(item)
+            } catch {
+              return item.trim()
+            }
+          }).flat()
         }
 
-        const jsonString = (rawArray[0] as string).trim();
-
-        return JSON.parse(jsonString)
+        const jsonString = (rawArray as string).trim();
+        return JSON.parse(jsonString);
       } catch (error) {
-        console.error('Ошибка разбора JSON:', error, rawArray[0]);
+        console.error('Ошибка разбора JSON:', error, rawArray);
       }
     }
     return [];

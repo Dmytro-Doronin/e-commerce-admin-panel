@@ -2,18 +2,16 @@ import {Component, effect, inject, OnDestroy, OnInit, Signal, signal} from '@ang
 import {ProductsService} from '../../services/product.service';
 import {Product} from '../../interfaces/products.interface';
 import {ImagesArrayComponentComponent} from '../../components/images-array-component/images-array-component.component';
-import {TableRowComponent} from '../../components/table/table-row/table-row.component';
 import {
   MatCell,
-  MatCellDef,
   MatColumnDef,
   MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
+  MatHeaderRow, MatRow,
   MatTable, MatTableModule
 } from '@angular/material/table';
 import {MatButton} from '@angular/material/button';
 import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
+import {AppLoadingService} from '../../services/app-loading.service';
 
 @Component({
   selector: 'app-products-page',
@@ -35,11 +33,13 @@ import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 })
 export class ProductsPageComponent implements OnInit, OnDestroy {
   private productService = inject(ProductsService)
+  private appLoadingService = inject(AppLoadingService)
   products: Signal<Product[]> = this.productService.products
   productsTittles: Signal<string[]> = this.productService.tableHeads
   productsCount: Signal<number> = this.productService.countProducts
+  appLoading: Signal<boolean> = this.appLoadingService.appLoading
 
-  private limit = 15
+  limit = 10
   private offset = 0
 
   constructor() {
@@ -55,7 +55,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(event: PageEvent) {
-    this.offset = event.pageIndex * 15
+    this.offset = event.pageIndex * this.limit
     this.limit = event.pageSize
 
     this.productService.loadProducts(this.limit, this.offset)

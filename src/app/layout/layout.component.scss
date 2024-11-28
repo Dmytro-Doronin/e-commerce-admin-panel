@@ -5,11 +5,12 @@
   //  "aside main";
   //grid-template-columns: 239px 1fr;
   //grid-template-rows: auto 1fr;
-  overflow-y: hidden;
+  //overflow-y: hidden;
 }
 
 .content-wrapper {
   display: grid;
+  position: relative;
   grid-template-columns: 239px 1fr;
   height: calc(100vh - 64px);
   max-width: 1280px;
