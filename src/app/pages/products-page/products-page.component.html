@@ -2,6 +2,8 @@
 @if (products(); as products) {
   @if (productsTittles(); as productsTittles) {
 
+    <app-select (categoryIdChange)="setCategoryId($event)" [categories]="categories"></app-select>
+
     <table mat-table [dataSource]="products" class="mat-elevation-z8 table">
 
       @for (title of productsTittles; track title) {
@@ -25,7 +27,6 @@
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="productsTittles.concat(['actions'])"></tr>
       <tr mat-row *matRowDef="let row; columns: productsTittles.concat(['actions']);"></tr>
-
     </table>
 
 
@@ -37,6 +38,8 @@
     >
     </mat-paginator>
   }
+} @else {
+  <div >Not products yet</div>
 }
 
 

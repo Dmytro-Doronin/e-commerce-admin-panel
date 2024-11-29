@@ -1,0 +1,14 @@
+@if (categories(); as signal) {
+  @if (signal(); as categories) {
+    <mat-form-field>
+      <mat-label>Category</mat-label>
+      <mat-select (selectionChange)="setCategoryId($event)">
+        @for (category of categories; track category; let idx = $index) {
+          <mat-option [value]="idx">{{category}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+}
+
+

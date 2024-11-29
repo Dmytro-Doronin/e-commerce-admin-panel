@@ -1,0 +1,13 @@
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.select-overrides((
+    panel-background-color: var(--color-light-100),
+    enabled-trigger-text-color: var(--color-dark-900),
+    placeholder-text-color: var(--color-dark-900),
+    focused-arrow-color: var(--color-dark-900),
+
+  ));
+
+
+}

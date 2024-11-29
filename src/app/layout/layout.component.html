@@ -1,5 +1,5 @@
 <div class="layout">
-  <app-header></app-header>
+  <app-header [titleData]="titleData"></app-header>
   @if (loading()) {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   }

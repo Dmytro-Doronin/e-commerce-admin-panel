@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, computed, input, Signal} from '@angular/core';
 import {MatToolbar, MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 
@@ -10,5 +10,6 @@ import {MatButtonModule} from '@angular/material/button';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  titleData = input<Signal<{ title: string; count: number | null }>>()
 
 }

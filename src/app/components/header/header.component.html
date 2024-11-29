@@ -1,8 +1,14 @@
 <mat-toolbar class="header">
-  <div class="header-inner">
-      <span>My App</span>
-      <span class="example-spacer"></span>
-  </div>
-
+  @if (titleData(); as signal) {
+    @if (signal(); as data) {
+      <div class="header-inner">
+        <span class="title">{{ data.title }}</span>
+        @if (data.count) {
+          (<span>{{ data.count }}</span>)
+        }
+        <span class="example-spacer"></span>
+      </div>
+    }
+  }
 
 </mat-toolbar>

@@ -20,4 +20,5 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 export class LayoutComponent {
   appLoadingService = inject(AppLoadingService)
   loading: Signal<boolean> = this.appLoadingService.appLoading
+  titleData: Signal<{title: string; count: number | null}> = this.appLoadingService.titleData
 }

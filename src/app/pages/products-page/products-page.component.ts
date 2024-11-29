@@ -12,6 +12,8 @@ import {
 import {MatButton} from '@angular/material/button';
 import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 import {AppLoadingService} from '../../services/app-loading.service';
+import {SelectComponent} from '../../components/select/select.component';
+import {MatSelectChange} from '@angular/material/select';
 
 @Component({
   selector: 'app-products-page',
@@ -25,7 +27,8 @@ import {AppLoadingService} from '../../services/app-loading.service';
     MatRow,
     ImagesArrayComponentComponent,
     MatButton,
-    MatPaginatorModule
+    MatPaginatorModule,
+    SelectComponent
   ],
   standalone: true,
   templateUrl: './products-page.component.html',
@@ -37,10 +40,11 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   products: Signal<Product[]> = this.productService.products
   productsTittles: Signal<string[]> = this.productService.tableHeads
   productsCount: Signal<number> = this.productService.countProducts
-  appLoading: Signal<boolean> = this.appLoadingService.appLoading
+  categories: Signal<string[]> = this.productService.categories
 
   limit = 10
   private offset = 0
+  private categoryId: number = 0
 
   constructor() {
     effect(() => {
@@ -50,15 +54,21 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.productService.loadProducts(this.limit, this.offset)
-    this.productService.loadAllProducts()
+    this.productService.loadProducts(this.limit, this.offset, this.categoryId)
+    this.productService.loadAllProducts(this.categoryId)
   }
 
   onPageChange(event: PageEvent) {
     this.offset = event.pageIndex * this.limit
     this.limit = event.pageSize
 
-    this.productService.loadProducts(this.limit, this.offset)
+    this.productService.loadProducts(this.limit, this.offset, this.categoryId)
+  }
+
+  setCategoryId({ categoryId }: { categoryId: number }) {
+    this.categoryId = categoryId
+
+    this.productService.loadAllProducts(this.categoryId)
   }
 
   handleAction(id: string) {
