@@ -11,5 +11,4 @@ import {MatButtonModule} from '@angular/material/button';
 })
 export class HeaderComponent {
   titleData = input<Signal<{ title: string; count: number | null }>>()
-
 }

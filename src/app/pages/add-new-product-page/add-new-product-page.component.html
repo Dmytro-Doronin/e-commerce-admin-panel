@@ -2,7 +2,10 @@
 <form class="form" [formGroup]="addProductForm" (ngSubmit)="onSubmit()">
 
   <app-select (categoryIdChange)="setCategoryId($event)" [categories]="categories"></app-select>
-
+  <div *ngIf="categoryIdField && !categoryIdField!.valid && (categoryIdField?.dirty || categoryIdField?.touched)" class="error">
+    <div *ngIf="categoryIdField.errors?.['required']">Category is required</div>
+    <div *ngIf="categoryIdField.errors?.['nonZero']">Choose the category</div>
+  </div>
 
   <!--  title-->
   <mat-form-field class="example-full-width">
@@ -36,7 +39,23 @@
     <div *ngIf="description.errors?.['minlength']">The description must not be less than 3 or more then 100.</div>
   </div>
 
+  <!--  images-->
+  <mat-form-field class="example-full-width">
+    <mat-label>Images</mat-label>
+    <textarea
+      (input)="onImagesInput($event)"
+      class="text-area" cdkTextareaAutosize matInput formControlName="images"
+      rows="4">
+    </textarea>
+  </mat-form-field>
+
+  <div *ngIf="images && !images!.valid && (images?.dirty || images?.touched)" class="error">
+    <div *ngIf="images.errors?.['required']">Images is required</div>
+    <div *ngIf="images.errors?.['minlength']">The list of images must not be less than 1 or more then 3.</div>
+    <div *ngIf="images.errors?.['forbiddenName']">Some URLs are invalid.</div>
+  </div>
 
 
-  <button mat-button type="submit" [disabled]="addProductForm.invalid">Submit</button>
+
+  <button mat-flat-button type="submit" [disabled]="addProductForm.invalid">Submit</button>
 </form>

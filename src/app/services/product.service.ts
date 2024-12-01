@@ -1,7 +1,7 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import {Product, ResponseProducts} from '../interfaces/products.interface';
-import {GET_All_PRODUCTS, GET_PRODUCTS} from './graphQl-variables/products-variables.graphql';
+import {CreateProductInput, Product, ResponseProducts, ResponseProductsForAdd} from '../interfaces/products.interface';
+import {ADD_NEW_PRODUCT, GET_All_PRODUCTS, GET_PRODUCTS} from './graphQl-variables/products-variables.graphql';
 import {allowedKeys} from '../mockData/keys';
 import {AppLoadingService} from './app-loading.service';
 import {OperationVariables, TypedDocumentNode} from '@apollo/client';
@@ -49,6 +49,28 @@ export class ProductsService {
     })
   }
 
+  private fetchMutation<T, V extends OperationVariables>(
+    mutation: TypedDocumentNode<T, V>,
+    variables: V,
+    onSuccess: (data: T) => void
+  ) {
+    this.appLoadingService.show();
+    this.apollo
+      .mutate<T, V>({ mutation, variables })
+      .subscribe({
+        next: (result) => {
+          if (result.data) {
+            onSuccess(result.data);
+          }
+          this.appLoadingService.hide();
+        },
+        error: (err) => {
+          console.error('Error performing mutation:', err.message);
+          this.appLoadingService.hide();
+        },
+      });
+  }
+
   loadProducts(limit: number, offset: number, categoryId: number) {
     this.fetchData<ResponseProducts, { limit: number; offset: number; categoryId: number }>(
       GET_PRODUCTS,
@@ -69,7 +91,22 @@ export class ProductsService {
         this.productsAdditionalSignal.set(data.products);
         this.appLoadingService.appTitle('Products', data.products.length);
       }
-    );
+    )
+  }
+
+  addNewProducts(data: CreateProductInput) {
+    this.fetchMutation<
+      ResponseProductsForAdd,
+      { data: CreateProductInput }>(
+      ADD_NEW_PRODUCT,
+      {data},
+      (data) => {
+        // this.productsSignal.set(data.products)
+        // const filteredKeys = Object.keys(data.products[0]).filter((key) => allowedKeys.includes(key))
+        // this.tableHeadsSignal.set(filteredKeys)
+        console.log('New product added')
+      }
+    )
   }
 
   // loadProducts(limit: number, offset: number, categoryId: number) {

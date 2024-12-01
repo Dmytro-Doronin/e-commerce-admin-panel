@@ -14,7 +14,7 @@ export class AppLoadingService {
   get titleData() {
     return this.appTitleSignal
   }
-  appTitle(title: string, count: number) {
+  appTitle(title: string, count: number | null) {
     this.appTitleSignal.set({title, count})
   }
 

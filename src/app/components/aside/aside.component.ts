@@ -2,10 +2,12 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListItem, MatNavList} from '@angular/material/list';
+import {RouterLink} from '@angular/router';
+import {basePath} from '../../app.routes';
 
 @Component({
   selector: 'app-aside',
-  imports: [MatSidenavModule, MatIconModule, MatNavList, MatListItem],
+  imports: [MatSidenavModule, MatIconModule, MatNavList, MatListItem, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   templateUrl: './aside.component.html',
@@ -13,4 +15,5 @@ import {MatListItem, MatNavList} from '@angular/material/list';
 })
 export class AsideComponent {
 
+  protected readonly basePath = basePath;
 }
