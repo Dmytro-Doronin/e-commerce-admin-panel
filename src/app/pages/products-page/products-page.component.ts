@@ -9,11 +9,12 @@ import {
   MatHeaderRow, MatRow,
   MatTable, MatTableModule
 } from '@angular/material/table';
-import {MatButton} from '@angular/material/button';
+import {MatButton, MatButtonModule} from '@angular/material/button';
 import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
-import {AppLoadingService} from '../../services/app-loading.service';
 import {SelectComponent} from '../../components/select/select.component';
-import {MatSelectChange} from '@angular/material/select';
+import {CategoriesService} from '../../services/category.service';
+import {RouterLink} from '@angular/router';
+import {basePath} from '../../app.routes';
 
 @Component({
   selector: 'app-products-page',
@@ -28,7 +29,9 @@ import {MatSelectChange} from '@angular/material/select';
     ImagesArrayComponentComponent,
     MatButton,
     MatPaginatorModule,
-    SelectComponent
+    SelectComponent,
+    MatButtonModule,
+    RouterLink
   ],
   standalone: true,
   templateUrl: './products-page.component.html',
@@ -36,26 +39,21 @@ import {MatSelectChange} from '@angular/material/select';
 })
 export class ProductsPageComponent implements OnInit, OnDestroy {
   private productService = inject(ProductsService)
-  private appLoadingService = inject(AppLoadingService)
-  products: Signal<Product[]> = this.productService.products
+  private categoriesService = inject(CategoriesService)
+  products: Signal<Product[] | null> = this.productService.products
   productsTittles: Signal<string[]> = this.productService.tableHeads
   productsCount: Signal<number> = this.productService.countProducts
-  categories: Signal<string[]> = this.productService.categories
+  categories: Signal<string[]> = this.categoriesService.categoriesNames
+  // categories: Signal<string[]> = this.productService.categories
 
   limit = 10
   private offset = 0
   private categoryId: number = 0
 
-  constructor() {
-    effect(() => {
-      console.log('Updated titles:', this.productsTittles());
-      console.log('Updated зкщвгсеы:', this.products());
-    });
-  }
-
   ngOnInit() {
     this.productService.loadProducts(this.limit, this.offset, this.categoryId)
     this.productService.loadAllProducts(this.categoryId)
+    this.categoriesService.loadAllCategories()
   }
 
   onPageChange(event: PageEvent) {
@@ -67,7 +65,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
 
   setCategoryId({ categoryId }: { categoryId: number }) {
     this.categoryId = categoryId
-
+    this.productService.loadProducts(this.limit, this.offset, this.categoryId)
     this.productService.loadAllProducts(this.categoryId)
   }
 
@@ -78,5 +76,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.productService.resetState()
   }
+
+  protected readonly basePath = basePath;
 }
 

@@ -4,6 +4,7 @@ import {Product, ResponseProducts} from '../interfaces/products.interface';
 import {GET_All_PRODUCTS, GET_PRODUCTS} from './graphQl-variables/products-variables.graphql';
 import {allowedKeys} from '../mockData/keys';
 import {AppLoadingService} from './app-loading.service';
+import {OperationVariables, TypedDocumentNode} from '@apollo/client';
 
 @Injectable({
   providedIn: 'root',
@@ -11,14 +12,13 @@ import {AppLoadingService} from './app-loading.service';
 
 export class ProductsService {
   private appLoadingService = inject(AppLoadingService)
+  private apollo = inject(Apollo)
   private productsSignal = signal<Product[]>([])
   private productsAdditionalSignal = signal<Product[]>([])
   private tableHeadsSignal = signal<string[]>([])
   private countProductsSignal = computed(() => this.productsAdditionalSignal().length)
-  private categoriesSignal = computed(() => this.extractCategories(this.productsAdditionalSignal()))
+  private categoriesSignal = signal<string[]>([])
 
-
-  constructor(private apollo: Apollo) {}
 
   get products() {
     return this.productsSignal
@@ -33,51 +33,90 @@ export class ProductsService {
     return this.countProductsSignal
   }
 
-  loadProducts(limit: number, offset: number, categoryId: number) {
+  private fetchData<T, V extends OperationVariables>(query: TypedDocumentNode<T, V>, variables: V, onSuccess: (data: T) => void) {
     this.appLoadingService.show()
     this.apollo
-      .watchQuery<ResponseProducts>({ query: GET_PRODUCTS, variables: { limit, offset, categoryId } })
+      .watchQuery<T, V>({ query, variables })
       .valueChanges.subscribe({
-      next: (response) => {
-        this.productsSignal.set(response.data.products)
-        const filteredKeys = Object.keys(response.data.products[0]).filter(key => allowedKeys.includes(key))
-        this.tableHeadsSignal.set(filteredKeys)
+      next: (result) => {
+        onSuccess(result.data)
         this.appLoadingService.hide()
       },
       error: (err) => {
-        console.error('Error fetching products:', err)
+        console.error('Error fetching data:', err);
         this.appLoadingService.hide()
       },
     })
   }
 
+  loadProducts(limit: number, offset: number, categoryId: number) {
+    this.fetchData<ResponseProducts, { limit: number; offset: number; categoryId: number }>(
+      GET_PRODUCTS,
+      { limit, offset, categoryId },
+      (data) => {
+        this.productsSignal.set(data.products)
+        const filteredKeys = Object.keys(data.products[0]).filter((key) => allowedKeys.includes(key))
+        this.tableHeadsSignal.set(filteredKeys)
+      }
+    )
+  }
 
   loadAllProducts(categoryId: number) {
-    this.appLoadingService.show()
-    this.apollo
-      .watchQuery<ResponseProducts>({ query: GET_All_PRODUCTS, variables: { categoryId } })
-      .valueChanges.subscribe({
-      next: (response) => {
-        this.productsAdditionalSignal.set(response.data.products)
-
-        //products title
-        this.appLoadingService.appTitle('Products', response.data.products.length)
-
-        //hide loading
-        this.appLoadingService.hide()
-      },
-      error: (err) => {
-        console.error('Error fetching all products:', err);
-        this.appLoadingService.hide()
-      },
-    });
+    this.fetchData<ResponseProducts, { categoryId: number }>(
+      GET_All_PRODUCTS,
+      { categoryId },
+      (data) => {
+        this.productsAdditionalSignal.set(data.products);
+        this.appLoadingService.appTitle('Products', data.products.length);
+      }
+    );
   }
 
-  private extractCategories(products: Product[]): string[] {
-    const categoryNames = products.map((product) => product.category.name)
-    return Array.from(new Set(categoryNames))
-  }
-
+  // loadProducts(limit: number, offset: number, categoryId: number) {
+  //   this.appLoadingService.show()
+  //   this.apollo
+  //     .watchQuery<ResponseProducts>({ query: GET_PRODUCTS, variables: { limit, offset, categoryId } })
+  //     .valueChanges.subscribe({
+  //     next: (response) => {
+  //       this.productsSignal.set(response.data.products)
+  //       const filteredKeys = Object.keys(response.data.products[0]).filter(key => allowedKeys.includes(key))
+  //       this.tableHeadsSignal.set(filteredKeys)
+  //       this.appLoadingService.hide()
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching products:', err)
+  //       this.appLoadingService.hide()
+  //     },
+  //   })
+  // }
+  //
+  //
+  // loadAllProducts(categoryId: number) {
+  //   this.appLoadingService.show()
+  //   this.apollo
+  //     .watchQuery<ResponseProducts>({ query: GET_All_PRODUCTS, variables: { categoryId } })
+  //     .valueChanges.subscribe({
+  //     next: (response) => {
+  //       this.productsAdditionalSignal.set(response.data.products)
+  //
+  //       //products title
+  //       this.appLoadingService.appTitle('Products', response.data.products.length)
+  //
+  //       if (categoryId === 0) {
+  //         this.categoriesSignal.set(this.extractCategories(response.data.products))
+  //       }
+  //
+  //       //hide loading
+  //       this.appLoadingService.hide()
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching all products:', err);
+  //       this.appLoadingService.hide()
+  //     },
+  //   });
+  // }
+  //
+  //
   resetState() {
     this.productsSignal.set([])
     this.appLoadingService.hide()

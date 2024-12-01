@@ -2,7 +2,7 @@ import {TypedDocumentNode} from '@apollo/client';
 import {ResponseProducts} from '../../interfaces/products.interface';
 import {gql} from 'apollo-angular';
 
-export const GET_PRODUCTS: TypedDocumentNode<ResponseProducts, { limit: number, offset: number, $categoryId: number }> = gql`
+export const GET_PRODUCTS: TypedDocumentNode<ResponseProducts, { limit: number, offset: number, categoryId: number }> = gql`
   query GetProducts( $limit: Int, $offset: Int, $categoryId: Float ) {
     products (limit: $limit, offset: $offset, categoryId: $categoryId) {
       id
@@ -19,8 +19,8 @@ export const GET_PRODUCTS: TypedDocumentNode<ResponseProducts, { limit: number, 
   }
 `
 export const GET_All_PRODUCTS: TypedDocumentNode<ResponseProducts, {}> = gql`
-  query GetAllProducts {
-    products {
+  query GetAllProducts ( $categoryId: Float ) {
+    products (categoryId: $categoryId) {
       id
       title
       price
@@ -33,4 +33,4 @@ export const GET_All_PRODUCTS: TypedDocumentNode<ResponseProducts, {}> = gql`
       }
     }
   }
-`;
+`
