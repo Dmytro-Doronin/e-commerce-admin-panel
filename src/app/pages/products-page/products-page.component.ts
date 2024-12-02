@@ -1,4 +1,4 @@
-import {Component, effect, inject, OnDestroy, OnInit, Signal, signal} from '@angular/core';
+import {Component, effect, inject, OnChanges, OnDestroy, OnInit, Signal, signal, SimpleChanges} from '@angular/core';
 import {ProductsService} from '../../services/product.service';
 import {Product} from '../../interfaces/products.interface';
 import {ImagesArrayComponentComponent} from '../../components/images-array-component/images-array-component.component';
@@ -50,11 +50,20 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   private offset = 0
   private categoryId: number = 0
 
+  constructor() {
+    effect(() => {
+      const currentProducts = this.products();
+      console.log('Updated products:', currentProducts);
+    });
+  }
+
   ngOnInit() {
     this.productService.loadProducts(this.limit, this.offset, this.categoryId)
     this.productService.loadAllProducts(this.categoryId)
     this.categoriesService.loadAllCategories()
   }
+
+
 
   onPageChange(event: PageEvent) {
     this.offset = event.pageIndex * this.limit

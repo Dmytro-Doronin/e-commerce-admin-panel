@@ -1,0 +1,6 @@
+@if (alert(); as alert) {
+  <div class="alert" [ngClass]="{error: alert.severity === 'error', success: alert.severity === 'success'}" >
+    {{alert.message}}
+  </div>
+}
+

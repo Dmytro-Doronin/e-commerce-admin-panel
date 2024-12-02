@@ -10,7 +10,8 @@ import {forbiddenNameValidator} from '../../directives/forbidden-name.directive'
 import {AppLoadingService} from '../../services/app-loading.service';
 import {nonZeroValidator} from '../../validators/products-form.validator';
 import {ProductsService} from '../../services/product.service';
-import {CreateProductInput} from '../../interfaces/products.interface';
+import {CreateProductDto} from '../../interfaces/products.interface';
+import {IAlert} from '../../interfaces/app.interface';
 
 @Component({
   selector: 'app-add-new-product-page',
@@ -34,6 +35,7 @@ export class AddNewProductPageComponent implements OnInit {
   private appLoadingService = inject(AppLoadingService)
   private productService = inject(ProductsService)
   categories: Signal<string[]> = this.categoriesService.categoriesNames
+  alert: Signal<IAlert | null> = this.appLoadingService.alert
   categoryId: number | null = null
 
   addProductForm = new FormGroup({
@@ -81,10 +83,12 @@ export class AddNewProductPageComponent implements OnInit {
 
   onImagesInput(event: Event): void {
     const input = (event.target as HTMLTextAreaElement).value
-    const imageArray = input
+    const sanitizedInput = input.replace(/^\[|]$/g, '').replace(/"/g, '');
+    const imageArray = sanitizedInput
       .split(',')
       .map((img) => img.trim())
-      .filter((img) => img)
+      .filter((img) => img);
+
     this.addProductForm.get('images')?.setValue(imageArray)
   }
 
@@ -92,21 +96,18 @@ export class AddNewProductPageComponent implements OnInit {
     if (this.addProductForm.valid) {
       const formData = this.addProductForm.value
 
-      const payload: CreateProductInput = {
+      const payload: CreateProductDto = {
         title: formData.title!,
         price: parseFloat(String(formData.price!)),
         description: formData.description!,
         categoryId: parseFloat(String(formData.categoryId!)),
-        images: formData.images!,
-      };
-
-      console.log('Payload being sent:', payload)
-      console.log(typeof payload.price)
-      console.log(typeof payload.categoryId)
-
-      this.productService.addNewProducts(payload)
+        images: formData.images ?? []
+      }
+      // this.productService.addNewProducts(payload)
+      console.log(payload.images)
+      if (this.alert()?.severity === 'success') {
+        this.addProductForm.reset()
+      }
     }
-
-
   }
 }

@@ -1,6 +1,6 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import {CreateProductInput, Product, ResponseProducts, ResponseProductsForAdd} from '../interfaces/products.interface';
+import {CreateProductDto, Product, ResponseProducts, ResponseProductsForAdd} from '../interfaces/products.interface';
 import {ADD_NEW_PRODUCT, GET_All_PRODUCTS, GET_PRODUCTS} from './graphQl-variables/products-variables.graphql';
 import {allowedKeys} from '../mockData/keys';
 import {AppLoadingService} from './app-loading.service';
@@ -65,7 +65,7 @@ export class ProductsService {
           this.appLoadingService.hide();
         },
         error: (err) => {
-          console.error('Error performing mutation:', err.message);
+          this.appLoadingService.setAlert({message: err.message, severity: 'error'})
           this.appLoadingService.hide();
         },
       });
@@ -94,19 +94,14 @@ export class ProductsService {
     )
   }
 
-  addNewProducts(data: CreateProductInput) {
-    this.fetchMutation<
-      ResponseProductsForAdd,
-      { data: CreateProductInput }>(
+  addNewProducts(data: CreateProductDto) {
+    this.fetchMutation<ResponseProductsForAdd, { data: CreateProductDto }>(
       ADD_NEW_PRODUCT,
-      {data},
+      { data },
       (data) => {
-        // this.productsSignal.set(data.products)
-        // const filteredKeys = Object.keys(data.products[0]).filter((key) => allowedKeys.includes(key))
-        // this.tableHeadsSignal.set(filteredKeys)
-        console.log('New product added')
+        this.appLoadingService.setAlert({message: 'Product has been added', severity: 'success'})
       }
-    )
+    );
   }
 
   // loadProducts(limit: number, offset: number, categoryId: number) {

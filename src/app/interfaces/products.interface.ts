@@ -32,7 +32,7 @@ export interface ResponseProductsForAdd {
     }
   }
 }
-export interface CreateProductInput {
+export interface CreateProductDto  {
   title: string;
   price: number;
   categoryId: number;
