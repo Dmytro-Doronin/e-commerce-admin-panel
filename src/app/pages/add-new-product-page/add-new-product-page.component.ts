@@ -45,8 +45,8 @@ export class AddNewProductPageComponent implements OnInit {
     description: new FormControl('', [Validators.minLength(3), Validators.maxLength(100) ,Validators.required]),
     images: new FormControl<string[]>([], [
       Validators.minLength(1),
-      Validators.maxLength(3),
-      forbiddenNameValidator(/^https?:\/\/.+\.(jpg|jpeg|png|gif|bmp|webp|svg)$/),
+      Validators.maxLength(1),
+      forbiddenNameValidator(/^https?:\/\/[^,\s]+\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i),
       Validators.required]
     ),
   })
@@ -103,11 +103,8 @@ export class AddNewProductPageComponent implements OnInit {
         categoryId: parseFloat(String(formData.categoryId!)),
         images: formData.images ?? []
       }
-      // this.productService.addNewProducts(payload)
-      console.log(payload.images)
-      if (this.alert()?.severity === 'success') {
-        this.addProductForm.reset()
-      }
+      this.productService.addNewProducts(payload)
+      this.categoryId = null
     }
   }
 }
