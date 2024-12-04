@@ -1,5 +1,10 @@
 import {TypedDocumentNode} from '@apollo/client';
-import {CreateProductDto, ResponseProducts, ResponseProductsForAdd} from '../../interfaces/products.interface';
+import {
+  CreateProductDto,
+  ResponseDeleteProduct,
+  ResponseProducts,
+  ResponseProductsForAdd
+} from '../../interfaces/products.interface';
 import {gql} from 'apollo-angular';
 
 
@@ -37,6 +42,11 @@ export const GET_All_PRODUCTS: TypedDocumentNode<ResponseProducts, {}> = gql`
   }
 `
 
+export const DELETE_PRODUCT: TypedDocumentNode<ResponseDeleteProduct, { id: number }> = gql`
+  mutation DeleteProduct($id: ID!) {
+    deleteProduct(id: $id)
+  }
+`;
 
 
 export const ADD_NEW_PRODUCT: TypedDocumentNode<

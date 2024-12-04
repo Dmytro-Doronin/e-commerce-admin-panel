@@ -15,6 +15,10 @@ import {SelectComponent} from '../../components/select/select.component';
 import {CategoriesService} from '../../services/category.service';
 import {RouterLink} from '@angular/router';
 import {basePath} from '../../app.routes';
+import {MatDialog} from '@angular/material/dialog';
+import {
+  DeleteConfirmationDialogComponent1
+} from '../../components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 
 @Component({
   selector: 'app-products-page',
@@ -31,15 +35,18 @@ import {basePath} from '../../app.routes';
     MatPaginatorModule,
     SelectComponent,
     MatButtonModule,
-    RouterLink
+    RouterLink,
   ],
+
   standalone: true,
   templateUrl: './products-page.component.html',
   styleUrl: './products-page.component.scss'
 })
 export class ProductsPageComponent implements OnInit, OnDestroy {
+  protected readonly basePath = basePath;
   private productService = inject(ProductsService)
   private categoriesService = inject(CategoriesService)
+  private dialog = inject(MatDialog);
   products: Signal<Product[] | null> = this.productService.products
   productsTittles: Signal<string[]> = this.productService.tableHeads
   productsCount: Signal<number> = this.productService.countProducts
@@ -52,9 +59,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      const currentProducts = this.products();
-      console.log('Updated products:', currentProducts);
-    });
+      const currentProducts = this.products()
+      console.log('Updated products:', currentProducts)
+    })
   }
 
   ngOnInit() {
@@ -63,12 +70,28 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     this.categoriesService.loadAllCategories()
   }
 
+  openDeleteDialog(productId: string): void {
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent1, {
+      data: {
+        title: 'Confirmation delete',
+        content: `Are you sure you want to remove the product? ${productId}?`,
+        cancelText: 'Cancel',
+        confirmText: 'Delete',
+      },
+    })
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.productService.deleteProduct(+productId)
+        console.log('Deleting the product with id ' + productId);
+      }
+    })
+  }
 
 
   onPageChange(event: PageEvent) {
     this.offset = event.pageIndex * this.limit
     this.limit = event.pageSize
-
     this.productService.loadProducts(this.limit, this.offset, this.categoryId)
   }
 
@@ -86,6 +109,5 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     this.productService.resetState()
   }
 
-  protected readonly basePath = basePath;
 }
 

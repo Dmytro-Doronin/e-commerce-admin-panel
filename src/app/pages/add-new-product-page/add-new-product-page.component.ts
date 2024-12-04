@@ -6,7 +6,7 @@ import {MatButton} from '@angular/material/button';
 import {NgIf} from '@angular/common';
 import {SelectComponent} from '../../components/select/select.component';
 import {CategoriesService} from '../../services/category.service';
-import {forbiddenNameValidator} from '../../directives/forbidden-name.directive';
+import {forbiddenNameValidator} from '../../validators/forbidden-name.directive';
 import {AppLoadingService} from '../../services/app-loading.service';
 import {nonZeroValidator} from '../../validators/products-form.validator';
 import {ProductsService} from '../../services/product.service';

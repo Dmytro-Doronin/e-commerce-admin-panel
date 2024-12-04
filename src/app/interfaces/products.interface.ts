@@ -32,6 +32,11 @@ export interface ResponseProductsForAdd {
     }
   }
 }
+
+export interface ResponseDeleteProduct {
+  deleteProduct: boolean
+}
+
 export interface CreateProductDto  {
   title: string;
   price: number;
@@ -39,3 +44,4 @@ export interface CreateProductDto  {
   description: string;
   images: string[];
 }
+

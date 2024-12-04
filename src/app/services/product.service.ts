@@ -1,7 +1,18 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import {CreateProductDto, Product, ResponseProducts, ResponseProductsForAdd} from '../interfaces/products.interface';
-import {ADD_NEW_PRODUCT, GET_All_PRODUCTS, GET_PRODUCTS} from './graphQl-variables/products-variables.graphql';
+import {
+  CreateProductDto,
+  Product,
+  ResponseDeleteProduct,
+  ResponseProducts,
+  ResponseProductsForAdd
+} from '../interfaces/products.interface';
+import {
+  ADD_NEW_PRODUCT,
+  DELETE_PRODUCT,
+  GET_All_PRODUCTS,
+  GET_PRODUCTS
+} from './graphQl-variables/products-variables.graphql';
 import {allowedKeys} from '../mockData/keys';
 import {AppLoadingService} from './app-loading.service';
 import {OperationVariables, TypedDocumentNode} from '@apollo/client';
@@ -54,19 +65,19 @@ export class ProductsService {
     variables: V,
     onSuccess: (data: T) => void
   ) {
-    this.appLoadingService.show();
+    this.appLoadingService.show()
     this.apollo
       .mutate<T, V>({ mutation, variables })
       .subscribe({
         next: (result) => {
           if (result.data) {
-            onSuccess(result.data);
+            onSuccess(result.data)
           }
-          this.appLoadingService.hide();
+          this.appLoadingService.hide()
         },
         error: (err) => {
           this.appLoadingService.setAlert({message: err.message, severity: 'error'})
-          this.appLoadingService.hide();
+          this.appLoadingService.hide()
         },
       });
   }
@@ -101,7 +112,34 @@ export class ProductsService {
       (data) => {
         this.appLoadingService.setAlert({message: 'Product has been added', severity: 'success'})
       }
-    );
+    )
+  }
+
+  deleteProduct(id: number) {
+    this.fetchMutation<ResponseDeleteProduct, { id: number }>(
+      DELETE_PRODUCT,
+      { id },
+      (response) => {
+        if (response.deleteProduct) {
+          //remove from current product list
+          const filteredProducts = this.productsSignal().filter(product => product.id !== String(id))
+          this.productsSignal.set(filteredProducts)
+
+          //remove from product list
+          const filteredAdditionalProducts = this.productsAdditionalSignal().filter(product => product.id !== String(id))
+          this.productsAdditionalSignal.set(filteredAdditionalProducts)
+          this.appLoadingService.setAlert({
+            message: 'Product has been deleted',
+            severity: 'success',
+          });
+        } else {
+          this.appLoadingService.setAlert({
+            message: 'Failed to delete the product.',
+            severity: 'error',
+          })
+        }
+      }
+    )
   }
 
   // loadProducts(limit: number, offset: number, categoryId: number) {
