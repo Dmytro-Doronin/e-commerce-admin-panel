@@ -1,0 +1,63 @@
+<form class="form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+  @if (categories(); as signal) {
+      <app-select (categoryIdChange)="setCategoryId($event)" [categories]="signal"></app-select>
+  }
+
+  <div *ngIf="categoryIdField && !categoryIdField!.valid && (categoryIdField?.dirty || categoryIdField?.touched)" class="error">
+    <div *ngIf="categoryIdField.errors?.['required']">Category is required</div>
+    <div *ngIf="categoryIdField.errors?.['nonZero']">Choose the category</div>
+  </div>
+
+  <!--  title-->
+  <mat-form-field class="example-full-width">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title">
+  </mat-form-field>
+  <div *ngIf="title && !title!.valid && (title?.dirty || title?.touched)" class="error">
+    <div *ngIf="title.errors?.['required']">Title is required</div>
+    <div *ngIf="title.errors?.['minlength']">The title must not be less than 3 or more then 15.</div>
+  </div>
+
+  <!--  price-->
+  <mat-form-field class="example-full-width">
+    <mat-label>Price</mat-label>
+    <input matInput formControlName="price">
+  </mat-form-field>
+  <div *ngIf="price && !price!.valid && (price?.dirty || price?.touched)" class="error">
+    <div *ngIf="price.errors?.['required']">Price is required</div>
+    <div *ngIf="price.errors?.['minlength']">The price must not be less than 1 or more then 4.</div>
+  </div>
+
+
+  <!--  description-->
+  <mat-form-field class="example-full-width">
+    <mat-label>Description</mat-label>
+    <textarea class="text-area" cdkTextareaAutosize matInput formControlName="description" rows="4"></textarea>
+  </mat-form-field>
+
+  <div *ngIf="description && !description!.valid && (description?.dirty || description?.touched)" class="error">
+    <div *ngIf="description.errors?.['required']">Description is required</div>
+    <div *ngIf="description.errors?.['minlength']">The description must not be less than 3 or more then 100.</div>
+  </div>
+
+  <!--  images-->
+  <mat-form-field class="example-full-width">
+    <mat-label>Images</mat-label>
+    <textarea
+      (input)="onImagesInput($event)"
+      class="text-area" cdkTextareaAutosize matInput formControlName="images"
+      rows="4">
+    </textarea>
+  </mat-form-field>
+
+  <div *ngIf="images && !images!.valid && (images?.dirty || images?.touched)" class="error">
+    <div *ngIf="images.errors?.['required']">Images is required</div>
+    <div *ngIf="images.errors?.['minlength']">The list of images must not be less than 1 or more then 3.</div>
+    <div *ngIf="images.errors?.['forbiddenName']">Some URLs are invalid.</div>
+  </div>
+
+
+
+  <button mat-flat-button type="submit" [disabled]="productForm.invalid">Submit</button>
+</form>
