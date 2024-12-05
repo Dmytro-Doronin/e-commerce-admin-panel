@@ -11,7 +11,7 @@ import {
   ADD_NEW_PRODUCT,
   DELETE_PRODUCT,
   GET_All_PRODUCTS,
-  GET_PRODUCTS
+  GET_PRODUCTS, GET_SINGLE_PRODUCTS
 } from './graphQl-variables/products-variables.graphql';
 import {allowedKeys} from '../mockData/keys';
 import {AppLoadingService} from './app-loading.service';
@@ -25,6 +25,7 @@ export class ProductsService {
   private appLoadingService = inject(AppLoadingService)
   private apollo = inject(Apollo)
   private productsSignal = signal<Product[]>([])
+  private productSignal = signal<Product | null>(null)
   private productsAdditionalSignal = signal<Product[]>([])
   private tableHeadsSignal = signal<string[]>([])
   private countProductsSignal = computed(() => this.productsAdditionalSignal().length)
@@ -33,6 +34,10 @@ export class ProductsService {
 
   get products() {
     return this.productsSignal
+  }
+
+  get product() {
+    return this.productSignal
   }
   get categories() {
     return this.categoriesSignal
@@ -114,6 +119,27 @@ export class ProductsService {
       }
     )
   }
+
+  getProduct(id: string) {
+    this.fetchData<Product, { id: string }>(
+      GET_SINGLE_PRODUCTS,
+      { id },
+      (data) => {
+        this.productSignal.set(data)
+        // this.appLoadingService.setAlert({message: 'Product has been changed', severity: 'success'})
+      }
+    )
+  }
+  // getProduct(id: string) {
+  //   this.fetchMutation<Product, { id: string }>(
+  //     GET_SINGLE_PRODUCTS,
+  //     { id },
+  //     (data) => {
+  //       this.productSignal.set(data)
+  //       this.appLoadingService.setAlert({message: 'Product has been changed', severity: 'success'})
+  //     }
+  //   )
+  // }
 
   deleteProduct(id: number) {
     this.fetchMutation<ResponseDeleteProduct, { id: number }>(

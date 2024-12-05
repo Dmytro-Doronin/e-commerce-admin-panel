@@ -1,4 +1,4 @@
-import {Component, effect, input, OnInit, output, Signal} from '@angular/core';
+import {AfterViewInit, Component, effect, input, OnInit, output, Signal} from '@angular/core';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {MatButton} from '@angular/material/button';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
@@ -8,7 +8,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {SelectComponent} from '../select/select.component';
 import {nonZeroValidator} from '../../validators/products-form.validator';
 import {forbiddenNameValidator} from '../../validators/forbidden-name.directive';
-import {CreateProductDto} from '../../interfaces/products.interface';
+import {CreateProductDto, Product} from '../../interfaces/products.interface';
 import {Event} from '@angular/router';
 
 @Component({
@@ -30,11 +30,13 @@ import {Event} from '@angular/router';
 export class ProductFormComponent implements OnInit {
 
   categories = input<Signal<string[]>>()
-  productData = input<Signal<CreateProductDto>>()
+  productData = input<Signal<Product | null | undefined>>();
   isEditMode = input<boolean>(false)
   submit = output<CreateProductDto>({alias: 'submitForm'})
 
   categoryId: number | null = null
+
+
 
   productForm = new FormGroup({
     title: new FormControl('', [Validators.minLength(3), Validators.maxLength(15) ,Validators.required]),
@@ -50,18 +52,20 @@ export class ProductFormComponent implements OnInit {
   })
 
   ngOnInit() {
-    effect(() => {
-      const product = this.productData()
-      if (this.isEditMode() && product) {
-        this.productForm.patchValue({
-          title: product().title,
-          price: product().price,
-          description: product().description,
-          categoryId: product().categoryId,
-          images: product().images,
-        })
+      const signal = this.productData()
+      if (signal) {
+        const product = signal()
+        if (this.isEditMode() && product) {
+          console.log('Product:', product);
+
+          this.productForm.patchValue({
+            title: product.title,
+            price: product.price,
+            description: product.description,
+            images: product.images,
+          })
+        }
       }
-    })
   }
 
   setCategoryId({ categoryId }: { categoryId: number }) {
