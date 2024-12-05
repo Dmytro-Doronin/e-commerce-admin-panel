@@ -45,7 +45,8 @@
   <mat-form-field class="example-full-width">
     <mat-label>Images</mat-label>
     <textarea
-      (input)="onImagesInput($event)"
+      #imageInput
+      (input)="onImagesInput(imageInput.value)"
       class="text-area" cdkTextareaAutosize matInput formControlName="images"
       rows="4">
     </textarea>

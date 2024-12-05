@@ -42,11 +42,28 @@ export const GET_All_PRODUCTS: TypedDocumentNode<ResponseProducts, {}> = gql`
   }
 `
 
+export const GET_SINGLE_PRODUCTS: TypedDocumentNode<ResponseProducts, {}> = gql`
+  query GetSingleProducts ( $id: ID! ) {
+    products (id: $id) {
+      id
+      title
+      price
+      description
+      images
+      category {
+        id
+        name
+        image
+      }
+    }
+  }
+`
+
 export const DELETE_PRODUCT: TypedDocumentNode<ResponseDeleteProduct, { id: number }> = gql`
   mutation DeleteProduct($id: ID!) {
     deleteProduct(id: $id)
   }
-`;
+`
 
 
 export const ADD_NEW_PRODUCT: TypedDocumentNode<

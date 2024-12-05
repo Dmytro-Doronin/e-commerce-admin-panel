@@ -12,6 +12,7 @@ export const routes: Routes = [
     children: [
       {path: 'products', component: ProductsPageComponent},
       {path: 'add-new-product', component: AddNewProductPageComponent},
+      {path: 'edit-product/:id', component: AddNewProductPageComponent},
     ]
   }
   // { path: '**', component: ErrorPageComponent },

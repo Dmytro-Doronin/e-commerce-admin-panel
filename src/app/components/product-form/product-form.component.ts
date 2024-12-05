@@ -1,4 +1,4 @@
-import {Component, input, output, Signal} from '@angular/core';
+import {Component, effect, input, OnInit, output, Signal} from '@angular/core';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {MatButton} from '@angular/material/button';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
@@ -9,6 +9,7 @@ import {SelectComponent} from '../select/select.component';
 import {nonZeroValidator} from '../../validators/products-form.validator';
 import {forbiddenNameValidator} from '../../validators/forbidden-name.directive';
 import {CreateProductDto} from '../../interfaces/products.interface';
+import {Event} from '@angular/router';
 
 @Component({
   selector: 'app-product-form',
@@ -26,9 +27,11 @@ import {CreateProductDto} from '../../interfaces/products.interface';
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss'
 })
-export class ProductFormComponent {
+export class ProductFormComponent implements OnInit {
 
   categories = input<Signal<string[]>>()
+  productData = input<Signal<CreateProductDto>>()
+  isEditMode = input<boolean>(false)
   submit = output<CreateProductDto>({alias: 'submitForm'})
 
   categoryId: number | null = null
@@ -45,6 +48,21 @@ export class ProductFormComponent {
       Validators.required]
     ),
   })
+
+  ngOnInit() {
+    effect(() => {
+      const product = this.productData()
+      if (this.isEditMode() && product) {
+        this.productForm.patchValue({
+          title: product().title,
+          price: product().price,
+          description: product().description,
+          categoryId: product().categoryId,
+          images: product().images,
+        })
+      }
+    })
+  }
 
   setCategoryId({ categoryId }: { categoryId: number }) {
     this.productForm.get('categoryId')?.setValue(categoryId)
@@ -71,15 +89,14 @@ export class ProductFormComponent {
     return this.productForm.get('images')
   }
 
-  onImagesInput(event: Event): void {
-    const input = (event.target as HTMLTextAreaElement).value
-    const sanitizedInput = input.replace(/^\[|]$/g, '').replace(/"/g, '');
+  onImagesInput(value: string): void {
+    const sanitizedInput = value.replace(/^\[|]$/g, '').replace(/"/g, '');
     const imageArray = sanitizedInput
       .split(',')
       .map((img) => img.trim())
       .filter((img) => img);
 
-    this.productForm.get('images')?.setValue(imageArray)
+    this.productForm.get('images')?.setValue(imageArray);
   }
 
   onSubmit() {
@@ -111,4 +128,5 @@ export class ProductFormComponent {
       this.categoryId = null;
     }
   }
+
 }
