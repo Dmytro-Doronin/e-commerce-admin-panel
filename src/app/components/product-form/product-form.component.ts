@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, effect, input, OnInit, output, Signal} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  effect,
+  input,
+  OnInit,
+  output,
+  runInInjectionContext, signal,
+  Signal
+} from '@angular/core';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {MatButton} from '@angular/material/button';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
@@ -8,7 +18,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {SelectComponent} from '../select/select.component';
 import {nonZeroValidator} from '../../validators/products-form.validator';
 import {forbiddenNameValidator} from '../../validators/forbidden-name.directive';
-import {CreateProductDto, Product} from '../../interfaces/products.interface';
+import {CreateProductDto, Product, Product2} from '../../interfaces/products.interface';
 import {Event} from '@angular/router';
 
 @Component({
@@ -30,19 +40,17 @@ import {Event} from '@angular/router';
 export class ProductFormComponent implements OnInit {
 
   categories = input<Signal<string[]>>()
-  productData = input<Signal<Product | null | undefined>>();
+  productData = input<Signal<Product2 | null | undefined>>();
   isEditMode = input<boolean>(false)
+  categoryId = signal<number | null>(0)
   submit = output<CreateProductDto>({alias: 'submitForm'})
-
-  categoryId: number | null = null
-
 
 
   productForm = new FormGroup({
-    title: new FormControl('', [Validators.minLength(3), Validators.maxLength(15) ,Validators.required]),
+    title: new FormControl('', [Validators.minLength(3), Validators.maxLength(40) ,Validators.required]),
     price: new FormControl<number | null>(null, [Validators.minLength(1), Validators.maxLength(4) ,Validators.required]),
     categoryId: new FormControl<number | null>(null, [nonZeroValidator(), Validators.required]),
-    description: new FormControl('', [Validators.minLength(3), Validators.maxLength(100) ,Validators.required]),
+    description: new FormControl('', [Validators.minLength(3), Validators.maxLength(400) ,Validators.required]),
     images: new FormControl<string[]>([], [
       Validators.minLength(1),
       Validators.maxLength(1),
@@ -52,20 +60,19 @@ export class ProductFormComponent implements OnInit {
   })
 
   ngOnInit() {
-      const signal = this.productData()
-      if (signal) {
-        const product = signal()
-        if (this.isEditMode() && product) {
-          console.log('Product:', product);
-
-          this.productForm.patchValue({
-            title: product.title,
-            price: product.price,
-            description: product.description,
-            images: product.images,
-          })
-        }
+    const signal = this.productData()
+    if (signal) {
+      const product = signal()
+      if (this.isEditMode() && product) {
+        this.categoryId.set(+product.product.category.id)
+        this.productForm.patchValue({
+          title: product.product.title,
+          price: product.product.price,
+          description: product.product.description,
+          images: product.product.images,
+        })
       }
+    }
   }
 
   setCategoryId({ categoryId }: { categoryId: number }) {
@@ -73,7 +80,7 @@ export class ProductFormComponent implements OnInit {
     const categoryIdControl = this.productForm.get('categoryId');
     categoryIdControl?.markAsTouched();
     categoryIdControl?.markAsDirty();
-    this.categoryId = categoryId
+    this.categoryId.set(categoryId)
   }
 
   get categoryIdField() {
@@ -129,7 +136,7 @@ export class ProductFormComponent implements OnInit {
         control?.markAsUntouched();
       })
 
-      this.categoryId = null;
+      this.categoryId.set(null);
     }
   }
 

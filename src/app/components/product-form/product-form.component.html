@@ -1,7 +1,7 @@
 <form class="form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
 
   @if (categories(); as signal) {
-      <app-select (categoryIdChange)="setCategoryId($event)" [categories]="signal"></app-select>
+      <app-select (categoryIdChange)="setCategoryId($event)" [categories]="signal" [categoryId]="categoryId"></app-select>
   }
 
   <div *ngIf="categoryIdField && !categoryIdField!.valid && (categoryIdField?.dirty || categoryIdField?.touched)" class="error">

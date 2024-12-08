@@ -15,6 +15,10 @@ export interface Product {
   category: ICategory;
 }
 
+export interface Product2 {
+  product: Product
+}
+
 export interface ResponseProducts {
   products: Product[];
 }

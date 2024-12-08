@@ -2,7 +2,7 @@
   @if (signal(); as categories) {
     <mat-form-field>
       <mat-label>Category</mat-label>
-      <mat-select (selectionChange)="setCategoryId($event)">
+      <mat-select [value]="localCategoryI" (selectionChange)="setCategoryId($event)">
         @for (category of categories; track category; let idx = $index) {
           <mat-option [value]="idx">{{category}}</mat-option>
         }

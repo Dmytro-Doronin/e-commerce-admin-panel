@@ -1,6 +1,6 @@
 import {TypedDocumentNode} from '@apollo/client';
 import {
-  CreateProductDto, Product,
+  CreateProductDto, Product, Product2,
   ResponseDeleteProduct,
   ResponseProducts,
   ResponseProductsForAdd
@@ -42,7 +42,7 @@ export const GET_All_PRODUCTS: TypedDocumentNode<ResponseProducts, {}> = gql`
   }
 `
 
-export const GET_SINGLE_PRODUCTS: TypedDocumentNode<Product, {id: string}> = gql`
+export const GET_SINGLE_PRODUCTS: TypedDocumentNode<Product2, {id: string}> = gql`
   query GetSingleProducts ( $id: ID! ) {
     product (id: $id) {
       id

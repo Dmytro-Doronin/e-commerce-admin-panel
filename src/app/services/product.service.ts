@@ -2,7 +2,7 @@ import {computed, inject, Injectable, signal} from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import {
   CreateProductDto,
-  Product,
+  Product, Product2,
   ResponseDeleteProduct,
   ResponseProducts,
   ResponseProductsForAdd
@@ -25,7 +25,7 @@ export class ProductsService {
   private appLoadingService = inject(AppLoadingService)
   private apollo = inject(Apollo)
   private productsSignal = signal<Product[]>([])
-  private productSignal = signal<Product | null>(null)
+  private productSignal = signal<Product2 | null>(null)
   private productsAdditionalSignal = signal<Product[]>([])
   private tableHeadsSignal = signal<string[]>([])
   private countProductsSignal = computed(() => this.productsAdditionalSignal().length)
@@ -121,7 +121,7 @@ export class ProductsService {
   }
 
   getProduct(id: string) {
-    this.fetchData<Product, { id: string }>(
+    this.fetchData<Product2, { id: string }>(
       GET_SINGLE_PRODUCTS,
       { id },
       (data) => {
