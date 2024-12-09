@@ -216,6 +216,6 @@ export class ProductsService {
   resetState() {
     this.productsSignal.set([])
     this.appLoadingService.hide()
-    this.productsSignal.set([])
+    this.productSignal.set(null)
   }
 }

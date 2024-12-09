@@ -1,4 +1,4 @@
-import {Component, input, OnInit, output, Signal, ViewEncapsulation} from '@angular/core';
+import {Component, effect, input, OnChanges, OnInit, output, signal, Signal, ViewEncapsulation} from '@angular/core';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatOption} from '@angular/material/core';
 import {MatSelect, MatSelectChange} from '@angular/material/select';
@@ -18,22 +18,20 @@ import {MatSelect, MatSelectChange} from '@angular/material/select';
 })
 export class SelectComponent implements OnInit {
   categories = input<Signal<string[]>>()
-  categoryId = input<Signal<number | null>>()
+  categoryId = input<Signal<number | null>>(signal<number | null>(null));
   changed = output<{categoryId: number}>({alias: 'categoryIdChange'})
-  localCategoryI: number | null = 0
-
-
+  localCategoryId: number | null = 0
 
   ngOnInit() {
     const categoryIdSignal = this.categoryId()
     if (categoryIdSignal) {
-      this.localCategoryI = categoryIdSignal()
+      this.localCategoryId = categoryIdSignal()
     }
-   console.log(this.localCategoryI);
   }
 
+
   setCategoryId(event: MatSelectChange) {
-    this.changed.emit({categoryId: event.value});
+    this.changed.emit({categoryId: event.value})
     console.log(event.value)
   }
 }

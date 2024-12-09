@@ -21,9 +21,16 @@ export class EditProductPageComponent implements OnInit {
   product: Signal<Product2 | null> = this.productService.product
   categories: Signal<string[]> = this.categoriesService.categoriesNames
 
+
   ngOnInit() {
-      const id = this.route.snapshot.paramMap.get('id')!
-      this.categoriesService.loadAllCategories()
-      this.productService.getProduct(id)
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id')
+      if (id) {
+        this.categoriesService.loadAllCategories()
+        this.productService.getProduct(id)
+      }
+    })
+    console.log('edit log', this.product())
   }
+
 }

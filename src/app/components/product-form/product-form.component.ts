@@ -53,11 +53,14 @@ export class ProductFormComponent implements OnInit {
     description: new FormControl('', [Validators.minLength(3), Validators.maxLength(400) ,Validators.required]),
     images: new FormControl<string[]>([], [
       Validators.minLength(1),
-      Validators.maxLength(1),
-      forbiddenNameValidator(/^https?:\/\/[^,\s]+\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i),
+      Validators.maxLength(3),
+      forbiddenNameValidator(
+        /^https?:\/\/[^,\s]+\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i
+      ),
       Validators.required]
     ),
   })
+
 
   ngOnInit() {
     const signal = this.productData()
@@ -68,6 +71,7 @@ export class ProductFormComponent implements OnInit {
         this.productForm.patchValue({
           title: product.product.title,
           price: product.product.price,
+          categoryId: +product.product.category.id,
           description: product.product.description,
           images: product.product.images,
         })
@@ -100,12 +104,21 @@ export class ProductFormComponent implements OnInit {
     return this.productForm.get('images')
   }
 
+  // onImagesInput(value: string): void {
+  //   const sanitizedInput = value.replace(/^\[|]$/g, '').replace(/"/g, '');
+  //   const imageArray = sanitizedInput
+  //     .split(',')
+  //     .map((img) => img.trim())
+  //     .filter((img) => img);
+  //
+  //   this.productForm.get('images')?.setValue(imageArray);
+  // }
+
   onImagesInput(value: string): void {
-    const sanitizedInput = value.replace(/^\[|]$/g, '').replace(/"/g, '');
-    const imageArray = sanitizedInput
+    const imageArray = value
       .split(',')
       .map((img) => img.trim())
-      .filter((img) => img);
+      .filter((img) => img.length > 0)
 
     this.productForm.get('images')?.setValue(imageArray);
   }
