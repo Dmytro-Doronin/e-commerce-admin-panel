@@ -64,7 +64,32 @@ export const DELETE_PRODUCT: TypedDocumentNode<ResponseDeleteProduct, { id: numb
     deleteProduct(id: $id)
   }
 `
+export const ADD_NEW_PRODUCT: TypedDocumentNode<
+  ResponseProductsForAdd,
+  { data: CreateProductDto }
+> = gql`
+  mutation AddNewProduct($data: CreateProductDto!) {
+    addProduct(data: $data) {
+      title
+      price
+      description
+      images
+      category {
+        id
+        name
+        image
+      }
+    }
+  }
+`
 
+mutation {
+  updateProduct(id: "1", changes: { title: "udpate" }) {
+    title
+    price
+    images
+  }
+}
 
 export const ADD_NEW_PRODUCT: TypedDocumentNode<
   ResponseProductsForAdd,
@@ -83,7 +108,7 @@ export const ADD_NEW_PRODUCT: TypedDocumentNode<
       }
     }
   }
-`;
+`
 
 
 

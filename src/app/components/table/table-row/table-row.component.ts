@@ -25,13 +25,11 @@ export class TableRowComponent {
       if (column === 'images' && Array.isArray(value)) {
         return value.map((image) => {
           try {
-            // Попытка распарсить строку как JSON, если она имеет обёрнутые кавычки
             return JSON.parse(image);
           } catch {
-            // Если JSON.parse не нужен, возвращаем как есть
             return image;
           }
-        });
+        })
       }
 
       return value || '';

@@ -1,4 +1,9 @@
 @if (product()) {
-  <app-product-form [categories]="categories" [isEditMode]="true" [productData]="product"></app-product-form>
+  <app-product-form
+    [categories]="categories"
+    [isEditMode]="true"
+    [productData]="product"
+    (submitForm)="onFormSubmit($event)"
+  ></app-product-form>
 }
 

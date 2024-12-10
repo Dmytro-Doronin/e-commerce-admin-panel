@@ -1,6 +1,6 @@
 import {Component, effect, inject, OnInit, Signal, signal} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Product, Product2} from '../../interfaces/products.interface';
+import {CreateProductDto, Product, Product2} from '../../interfaces/products.interface';
 import {ProductsService} from '../../services/product.service';
 import {ProductFormComponent} from '../../components/product-form/product-form.component';
 import {CategoriesService} from '../../services/category.service';
@@ -31,6 +31,10 @@ export class EditProductPageComponent implements OnInit {
       }
     })
     console.log('edit log', this.product())
+  }
+
+  onFormSubmit(data: CreateProductDto) {
+    console.log(data)
   }
 
 }

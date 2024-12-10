@@ -1,5 +1,5 @@
 <div class="image-container">
-  @for (image of imageArray; track image) {
+  @for (image of sanitizedImages; track image) {
     <img class="image" [src]="image" alt="Image" />
   }
 </div>
