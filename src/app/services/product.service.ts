@@ -5,17 +5,19 @@ import {
   Product, Product2,
   ResponseDeleteProduct,
   ResponseProducts,
-  ResponseProductsForAdd
+  ResponseProductsForAdd, ResponseUpdateProduct, UpdateProductDto
 } from '../interfaces/products.interface';
 import {
   ADD_NEW_PRODUCT,
-  DELETE_PRODUCT,
+  DELETE_PRODUCT, EDIT_PRODUCT,
   GET_All_PRODUCTS,
   GET_PRODUCTS, GET_SINGLE_PRODUCTS
 } from './graphQl-variables/products-variables.graphql';
 import {allowedKeys} from '../mockData/keys';
 import {AppLoadingService} from './app-loading.service';
 import {OperationVariables, TypedDocumentNode} from '@apollo/client';
+import {Router} from '@angular/router';
+import {basePath} from '../app.routes';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +26,7 @@ import {OperationVariables, TypedDocumentNode} from '@apollo/client';
 export class ProductsService {
   private appLoadingService = inject(AppLoadingService)
   private apollo = inject(Apollo)
+  router = inject(Router)
   private productsSignal = signal<Product[]>([])
   private productSignal = signal<Product2 | null>(null)
   private productsAdditionalSignal = signal<Product[]>([])
@@ -35,7 +38,6 @@ export class ProductsService {
   get products() {
     return this.productsSignal
   }
-
   get product() {
     return this.productSignal
   }
@@ -118,6 +120,37 @@ export class ProductsService {
         this.appLoadingService.setAlert({message: 'Product has been added', severity: 'success'})
       }
     )
+  }
+
+  editProducts(id: string, data: UpdateProductDto) {
+    this.fetchMutation<ResponseUpdateProduct, { id: string, changes: Partial<UpdateProductDto> }>(
+      EDIT_PRODUCT,
+      { id, changes: data },
+      (response) => {
+        const updatedProductData = response.updateProduct
+
+        const updatedProducts = this.productsSignal().map((product) =>
+          product.id === id
+            ? {
+              ...product,
+              title: updatedProductData.title,
+              description: updatedProductData.description,
+              price: updatedProductData.price,
+              images: updatedProductData.images,
+            }
+            : product
+        );
+
+        this.productsSignal.set(updatedProducts);
+
+        this.router.navigate([`${basePath}/products`]);
+
+        this.appLoadingService.setAlert({
+          message: 'Product has been changed',
+          severity: 'success',
+        });
+      }
+    );
   }
 
   getProduct(id: string) {

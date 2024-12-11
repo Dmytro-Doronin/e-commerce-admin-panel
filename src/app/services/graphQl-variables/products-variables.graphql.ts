@@ -3,7 +3,7 @@ import {
   CreateProductDto, Product, Product2,
   ResponseDeleteProduct,
   ResponseProducts,
-  ResponseProductsForAdd
+  ResponseProductsForAdd, ResponseUpdateProduct, UpdateProductDto
 } from '../../interfaces/products.interface';
 import {gql} from 'apollo-angular';
 
@@ -83,29 +83,17 @@ export const ADD_NEW_PRODUCT: TypedDocumentNode<
   }
 `
 
-mutation {
-  updateProduct(id: "1", changes: { title: "udpate" }) {
-    title
-    price
-    images
-  }
-}
 
-export const ADD_NEW_PRODUCT: TypedDocumentNode<
-  ResponseProductsForAdd,
-  { data: CreateProductDto }
+export const EDIT_PRODUCT: TypedDocumentNode<
+  ResponseUpdateProduct,
+  { id: string; changes: Partial<UpdateProductDto> }
 > = gql`
-  mutation AddNewProduct($data: CreateProductDto!) {
-    addProduct(data: $data) {
+  mutation UpdateProduct($id: ID!, $changes: UpdateProductDto!) {
+    updateProduct(id: $id, changes: $changes) {
       title
       price
       description
       images
-      category {
-        id
-        name
-        image
-      }
     }
   }
 `

@@ -37,8 +37,24 @@ export interface ResponseProductsForAdd {
   }
 }
 
+export interface ResponseUpdateProduct {
+  updateProduct: {
+    title: string;
+    price: number;
+    description: string;
+    images: string[];
+  }
+}
+
 export interface ResponseDeleteProduct {
   deleteProduct: boolean
+}
+
+export interface UpdateProductDto  {
+  title: string;
+  price: number;
+  description: string;
+  images: string[];
 }
 
 export interface CreateProductDto  {

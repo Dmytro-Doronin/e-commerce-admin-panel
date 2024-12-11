@@ -42,7 +42,7 @@ import {
   templateUrl: './products-page.component.html',
   styleUrl: './products-page.component.scss'
 })
-export class ProductsPageComponent implements OnInit, OnDestroy {
+export class ProductsPageComponent implements OnInit {
   protected readonly basePath = basePath;
   private productService = inject(ProductsService)
   private categoriesService = inject(CategoriesService)
@@ -65,7 +65,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.productService.loadProducts(this.limit, this.offset, this.categoryId)
+    if (!this.products() || this.products()!.length === 0) {
+      this.productService.loadProducts(this.limit, this.offset, this.categoryId);
+    }
     this.productService.loadAllProducts(this.categoryId)
     this.categoriesService.loadAllCategories()
   }
@@ -103,10 +105,6 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
 
   handleAction(id: string) {
     console.log(id)
-  }
-
-  ngOnDestroy() {
-    this.productService.resetState()
   }
 
 }

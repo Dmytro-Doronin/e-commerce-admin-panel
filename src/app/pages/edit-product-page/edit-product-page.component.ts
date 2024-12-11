@@ -21,20 +21,26 @@ export class EditProductPageComponent implements OnInit {
   product: Signal<Product2 | null> = this.productService.product
   categories: Signal<string[]> = this.categoriesService.categoriesNames
 
+  productId: string | null = null
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-      const id = params.get('id')
-      if (id) {
+      this.productId = params.get('id')
+      if (this.productId) {
         this.categoriesService.loadAllCategories()
-        this.productService.getProduct(id)
+        this.productService.getProduct(this.productId)
       }
     })
     console.log('edit log', this.product())
   }
 
   onFormSubmit(data: CreateProductDto) {
-    console.log(data)
+    this.productService.editProducts(this.productId!, {
+      title: data.title,
+      description: data.description,
+      price: data.price,
+      images: data.images,
+    })
   }
 
 }
