@@ -6,7 +6,7 @@ import {GET_CATEGORIES} from './graphQl-variables/categories-variables.graphql';
 import {Category, ResponseCategory} from '../interfaces/category.interface';
 import {ResponseUsersInterface} from '../interfaces/users.interface';
 import {GET_USERS} from './graphQl-variables/users-variables.graphql';
-import {allowedKeysForUser} from '../mockData/keys';
+import {allowedKeysForUser, keysForCategories} from '../mockData/keys';
 import {ApiService} from './api.service';
 
 @Injectable({
@@ -19,9 +19,13 @@ export class CategoriesService {
 
   private categoriesSignal = signal<Category[]>([])
   private categoriesNamesSignal = signal<string[]>([])
+  private categoriesTableHeadSignal = signal<string[]>([])
 
   get categories() {
     return this.categoriesSignal
+  }
+  get categoriesTableHead() {
+    return this.categoriesTableHeadSignal
   }
 
   get categoriesNames() {
@@ -30,14 +34,24 @@ export class CategoriesService {
 
 
 
-  loadAllCategories() {
+  loadAllCategories(isHeader = false, limit: number = 10) {
     this.apiService.fetchData<ResponseCategory, never>(
       GET_CATEGORIES,
       null,
       (data) => {
-        this.categoriesSignal.set(data.categories)
+        const limitedCategories = data.categories.slice(0, limit)
+        this.categoriesSignal.set(limitedCategories)
+
+        const allKeys = Object.keys(data.categories[0]);
+        const filteredKeys = allKeys.filter((key) => keysForCategories.includes(key))
+        this.categoriesTableHeadSignal.set(filteredKeys)
+
         const categoryNames = this.extractCategories(data.categories)
         this.categoriesNamesSignal.set(categoryNames)
+
+        if (isHeader) {
+          this.appLoadingService.appTitle('Categories', data.categories.length)
+        }
       }
     )
 

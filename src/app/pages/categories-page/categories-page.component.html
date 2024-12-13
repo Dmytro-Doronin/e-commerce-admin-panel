@@ -1,0 +1,52 @@
+@if (categories(); as categories) {
+  @if (categoriesTitles(); as titles) {
+    @if (categories && categories.length > 0) {
+      <div class="panel">
+        <button class="mb10" mat-flat-button [routerLink]="[basePath, 'add-new-category']">Add new product</button>
+      </div>
+
+      <table mat-table [dataSource]="categories" class="mat-elevation-z8 table">
+
+        @for (title of titles; track title) {
+          <ng-container [matColumnDef]="title">
+            <th class="row" mat-header-cell *matHeaderCellDef>{{title}}</th>
+            <td class="row" mat-cell *matCellDef="let element">
+              @if (title === 'image') {
+                <img [src]="element[title]" alt="image" width="50" height="50" />
+              } @else {
+                {{ element[title] }}
+              }
+            </td>
+          </ng-container>
+
+        }
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              [routerLink]="[basePath, 'edit-product', element.id]"
+              class="button"
+              mat-button mat-flat-button
+            >Edit
+            </button>
+            <button class="button" mat-button>Delete</button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="titles.concat(['actions'])"></tr>
+        <tr mat-row *matRowDef="let row; columns: titles.concat(['actions']);"></tr>
+      </table>
+
+      @if (limit > categories.length) {
+        <button
+          [disabled]="loading()"
+          class="mt10"
+          mat-flat-button
+          (click)="loadMore()"
+        >Load more
+        </button>
+      }
+    } @else {
+      <div class="no-items">No categories yet</div>
+    }
+  }
+}
