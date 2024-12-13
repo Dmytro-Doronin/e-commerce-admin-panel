@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import {ProductsPageComponent} from './pages/products-page/products-page.component';
 import {AddNewProductPageComponent} from './pages/add-new-product-page/add-new-product-page.component';
 import {EditProductPageComponent} from './pages/edit-product-page/edit-product-page.component';
+import {UsersPageComponent} from './pages/users-page/users-page.component';
 
 export const basePath = '/main'
 
@@ -14,6 +15,8 @@ export const routes: Routes = [
       {path: 'products', component: ProductsPageComponent},
       {path: 'add-new-product', component: AddNewProductPageComponent},
       {path: 'edit-product/:id', component: EditProductPageComponent},
+      {path: 'users', component: UsersPageComponent},
+
     ]
   }
   // { path: '**', component: ErrorPageComponent },

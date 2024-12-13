@@ -1,8 +1,9 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {AppLoadingService} from './app-loading.service';
-import {Apollo} from 'apollo-angular';
 import {ApiService} from './api.service';
 import {GET_USERS} from './graphQl-variables/users-variables.graphql';
+import {ResponseUsersInterface, UsersInterface} from '../interfaces/users.interface';
+import {allowedKeys, allowedKeysForUser} from '../mockData/keys';
 
 @Injectable({
   providedIn: 'root',
@@ -12,10 +13,15 @@ export class UsersService {
   private appLoadingService = inject(AppLoadingService)
   private apiService = inject(ApiService)
 
-  private users = signal<UsersInterface[] | null>(null)
+  private usersSignal = signal<UsersInterface[]>([])
+  private usersTableHeadsSignal = signal<string[]>([])
 
   get getUsers() {
-    return this.users
+    return this.usersSignal
+  }
+
+  get usersTableHeads () {
+    return this.usersTableHeadsSignal
   }
 
   fetchUsers() {
@@ -23,7 +29,11 @@ export class UsersService {
       GET_USERS,
       null,
       (data) => {
-        this.users.set(data.users)
+        this.usersSignal.set(data.users)
+        const allKeys = Object.keys(data.users[0]);
+        const filteredKeys = allKeys.filter((key) => allowedKeysForUser.includes(key))
+        this.usersTableHeadsSignal.set(filteredKeys)
+        this.appLoadingService.appTitle('Users', data.users.length)
       }
     )
   }

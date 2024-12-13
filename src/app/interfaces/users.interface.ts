@@ -1,5 +1,5 @@
 
-interface UsersInterface {
+export interface UsersInterface {
   id: string;
   email: string;
   name: string;
@@ -7,6 +7,6 @@ interface UsersInterface {
   avatar: string;
 }
 
-interface ResponseUsersInterface {
+export interface ResponseUsersInterface {
   users: UsersInterface[]
 }

@@ -15,7 +15,6 @@ import {
 } from './graphQl-variables/products-variables.graphql';
 import {allowedKeys} from '../mockData/keys';
 import {AppLoadingService} from './app-loading.service';
-import {OperationVariables, TypedDocumentNode} from '@apollo/client';
 import {Router} from '@angular/router';
 import {basePath} from '../app.routes';
 import {ApiService} from './api.service';

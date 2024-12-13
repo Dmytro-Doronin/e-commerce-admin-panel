@@ -1,0 +1,24 @@
+@if (users(); as users) {
+  @if (usersTittles(); as titles) {
+    @if (users.length > 0 && users) {
+      <table mat-table [dataSource]="users" class="mat-elevation-z8 table">
+        @for (title of titles; track title) {
+          <ng-container [matColumnDef]="title">
+            <th class="row" mat-header-cell *matHeaderCellDef>{{title}}</th>
+            <td class="row" mat-cell *matCellDef="let element">
+              @if (title === 'avatar') {
+                <img [src]="element[title]" alt="Avatar" width="50" height="50" />
+              } @else {
+                {{ element[title] }}
+              }
+            </td>
+          </ng-container>
+        }
+        <tr mat-header-row *matHeaderRowDef="titles"></tr>
+        <tr mat-row *matRowDef="let row; columns: titles"></tr>
+      </table>
+    } @else {
+      <div class="no-items">No users yet</div>
+    }
+  }
+}

@@ -10,35 +10,26 @@
   <hr class="line">
   <div class="block-title">Admin</div>
   <mat-nav-list>
-    <a [routerLink]="[basePath, 'products']" mat-list-item>
-      <div class="list-item">
-        <mat-icon class="icon" color="primary">dataset</mat-icon>
-        <span>Products</span>
-      </div>
-    </a>
-    <a mat-list-item>
-      <div class="list-item">
-        <mat-icon class="icon" color="primary">menu</mat-icon>
-        <span>Categories</span>
-      </div>
-    </a>
+    @for (item of adminLinks; track item.title) {
+      <a mat-list-item [routerLink]="[item.link]" >
+        <div class="list-item">
+          <mat-icon class="icon" color="primary">{{item.iconName}}</mat-icon>
+          <span>{{item.title}}</span>
+        </div>
+      </a>
+    }
   </mat-nav-list>
 
   <div class="block-title">User</div>
-
   <mat-nav-list>
-    <a mat-list-item>
-      <div class="list-item">
-        <mat-icon class="icon" color="primary">group</mat-icon>
-        <span>Users</span>
-      </div>
-    </a>
-    <a mat-list-item>
-      <div class="list-item">
-        <mat-icon class="icon" color="primary">logout</mat-icon>
-        <span>Logout</span>
-      </div>
-    </a>
+    @for (item of userLinks; track item.title) {
+      <a mat-list-item [routerLink]="[item.link]" >
+          <div class="list-item">
+            <mat-icon class="icon" color="primary">{{item.iconName}}</mat-icon>
+            <span>{{item.title}}</span>
+          </div>
+        </a>
+    }
   </mat-nav-list>
 
 </mat-sidenav-container>

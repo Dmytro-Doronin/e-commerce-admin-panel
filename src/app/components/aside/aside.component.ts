@@ -4,6 +4,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatListItem, MatNavList} from '@angular/material/list';
 import {RouterLink} from '@angular/router';
 import {basePath} from '../../app.routes';
+import {adminLinks, userLinks} from '../../mockData/pages';
 
 @Component({
   selector: 'app-aside',
@@ -16,4 +17,6 @@ import {basePath} from '../../app.routes';
 export class AsideComponent {
 
   protected readonly basePath = basePath;
+  protected readonly userLinks = userLinks;
+  protected readonly adminLinks = adminLinks;
 }
