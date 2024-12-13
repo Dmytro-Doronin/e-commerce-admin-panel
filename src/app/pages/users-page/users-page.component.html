@@ -17,6 +17,17 @@
         <tr mat-header-row *matHeaderRowDef="titles"></tr>
         <tr mat-row *matRowDef="let row; columns: titles"></tr>
       </table>
+
+      @if (countUser() && countUser()! > users!.length) {
+        <button
+          [disabled]="loading()"
+          class="mt10"
+          mat-button
+          mat-flat-button
+          (click)="onLoadUsers()"
+        >Load more
+        </button>
+      }
     } @else {
       <div class="no-items">No users yet</div>
     }

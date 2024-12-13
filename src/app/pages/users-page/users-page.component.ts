@@ -12,6 +12,10 @@ import {
 } from '@angular/material/table';
 import {ImagesArrayComponentComponent} from '../../components/images-array-component/images-array-component.component';
 import {JsonPipe} from '@angular/common';
+import {PageEvent} from '@angular/material/paginator';
+import {MatButton} from '@angular/material/button';
+import {AppLoadingService} from '../../services/app-loading.service';
+import {of, pipe, switchMap, tap} from 'rxjs';
 
 @Component({
   selector: 'app-users-page',
@@ -26,19 +30,31 @@ import {JsonPipe} from '@angular/common';
     MatRowDef,
     MatCellDef,
     MatHeaderCellDef,
+    MatButton,
   ],
   standalone: true,
   templateUrl: './users-page.component.html',
   styleUrl: './users-page.component.scss'
 })
 export class UsersPageComponent implements OnInit {
-
   usersService = inject(UsersService)
-
+  appService = inject(AppLoadingService)
   users: Signal<UsersInterface[] | null> = this.usersService.getUsers
+  countUser: Signal<number | null> = this.usersService.countUsers
+  loading: Signal<boolean> = this.appService.appLoading
   usersTittles: Signal<string[]> = this.usersService.usersTableHeads
 
+  limit = 10
+
   ngOnInit() {
-    this.usersService.fetchUsers()
+    this.usersService.fetchUsers(this.limit)
+    this.usersService.fetchAllUsers()
   }
+
+  onLoadUsers() {
+    this.limit = this.limit + 5
+    this.usersService.fetchUsers(this.limit)
+  }
+
+
 }
