@@ -55,6 +55,4 @@ export class UsersPageComponent implements OnInit {
     this.limit = this.limit + 5
     this.usersService.fetchUsers(this.limit)
   }
-
-
 }

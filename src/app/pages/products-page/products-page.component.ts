@@ -46,7 +46,7 @@ export class ProductsPageComponent implements OnInit {
   protected readonly basePath = basePath;
   private productService = inject(ProductsService)
   private categoriesService = inject(CategoriesService)
-  private dialog = inject(MatDialog);
+  private dialog = inject(MatDialog)
   products: Signal<Product[] | null> = this.productService.products
   productsTittles: Signal<string[]> = this.productService.tableHeads
   productsCount: Signal<number> = this.productService.countProducts

@@ -36,8 +36,6 @@
         <tr mat-header-row *matHeaderRowDef="productsTittles.concat(['actions'])"></tr>
         <tr mat-row *matRowDef="let row; columns: productsTittles.concat(['actions']);"></tr>
       </table>
-
-
       <mat-paginator
         [length]="productsCount()"
         [pageSize]="limit"

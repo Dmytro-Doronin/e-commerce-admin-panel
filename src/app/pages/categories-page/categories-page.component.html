@@ -2,7 +2,7 @@
   @if (categoriesTitles(); as titles) {
     @if (categories && categories.length > 0) {
       <div class="panel">
-        <button class="mb10" mat-flat-button [routerLink]="[basePath, 'add-new-category']">Add new product</button>
+        <button class="mb10" mat-flat-button [routerLink]="[basePath, 'add-new-category']">Add new category</button>
       </div>
 
       <table mat-table [dataSource]="categories" class="mat-elevation-z8 table">
@@ -29,14 +29,14 @@
               mat-button mat-flat-button
             >Edit
             </button>
-            <button class="button" mat-button>Delete</button>
+            <button class="button" mat-button (click)="openDeleteDialog(element.id)">Delete</button>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="titles.concat(['actions'])"></tr>
         <tr mat-row *matRowDef="let row; columns: titles.concat(['actions']);"></tr>
       </table>
 
-      @if (limit > categories.length) {
+      @if (showLoadMore()) {
         <button
           [disabled]="loading()"
           class="mt10"

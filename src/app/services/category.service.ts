@@ -1,13 +1,21 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {AppLoadingService} from './app-loading.service';
-import {Apollo} from 'apollo-angular';
 
-import {GET_CATEGORIES} from './graphQl-variables/categories-variables.graphql';
-import {Category, ResponseCategory} from '../interfaces/category.interface';
-import {ResponseUsersInterface} from '../interfaces/users.interface';
-import {GET_USERS} from './graphQl-variables/users-variables.graphql';
-import {allowedKeysForUser, keysForCategories} from '../mockData/keys';
+import {ADD_NEW_CATEGORY, DELETE_CATEGORY, GET_CATEGORIES} from './graphQl-variables/categories-variables.graphql';
+import {
+  Category,
+  CreateCategoryDto,
+  ResponseCategory,
+  ResponseCategoryForAdd,
+  ResponseDeleteCategory
+} from '../interfaces/category.interface';
+import {keysForCategories} from '../mockData/keys';
 import {ApiService} from './api.service';
+import {Router} from '@angular/router';
+import {basePath} from '../app.routes';
+import {ResponseDeleteProduct} from '../interfaces/products.interface';
+import {DELETE_PRODUCT} from './graphQl-variables/products-variables.graphql';
+
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +24,7 @@ import {ApiService} from './api.service';
 export class CategoriesService {
   private appLoadingService = inject(AppLoadingService)
   private apiService = inject(ApiService)
+  private router = inject(Router)
 
   private categoriesSignal = signal<Category[]>([])
   private categoriesNamesSignal = signal<string[]>([])
@@ -55,30 +64,46 @@ export class CategoriesService {
       }
     )
 
-    // this.appLoadingService.show()
-    // this.apollo
-    //   .watchQuery<ResponseCategory>({ query: GET_CATEGORIES })
-    //   .valueChanges.subscribe({
-    //   next: (response) => {
-    //
-    //     const categoryNames = this.extractCategories(response.data.categories)
-    //     this.categoriesNamesSignal.set(categoryNames)
-    //
-    //     this.appLoadingService.hide()
-    //   },
-    //   error: (err) => {
-    //     console.error('Error fetching categories:', err);
-    //     this.appLoadingService.hide()
-    //   },
-    // })
   }
+
+  addNewCategory(data: CreateCategoryDto) {
+    this.apiService.fetchMutation<ResponseCategoryForAdd, { data: CreateCategoryDto }>(
+      ADD_NEW_CATEGORY,
+      { data },
+      (data) => {
+        this.appLoadingService.setAlert({message: 'Category has been added', severity: 'success'})
+        this.router.navigate([`${basePath}/categories`])
+      }
+    )
+  }
+
+  deleteCategory(id: number) {
+    this.apiService.fetchMutation<ResponseDeleteCategory, { id: number }>(
+      DELETE_CATEGORY,
+      { id },
+      (response) => {
+        if (response.deleteCategory) {
+          //remove from current category list
+          const filteredCategories = this.categoriesSignal().filter(category => category.id !== String(id))
+          this.categoriesSignal.set(filteredCategories)
+
+          this.appLoadingService.setAlert({
+            message: 'Category has been deleted',
+            severity: 'success',
+          });
+        } else {
+          this.appLoadingService.setAlert({
+            message: 'Failed to delete the category.',
+            severity: 'error',
+          })
+        }
+      }
+    )
+  }
+
 
   private extractCategories(categories: Category[]): string[] {
     return ['All', ...Array.from(new Set(categories.map((category) => category.name)))]
-    // const categoryNames = categories.map((category) => category.name)
-    // const finalArray: string[] = Array.from(new Set(categoryNames))
-    // finalArray.unshift('All')
-    // return finalArray
   }
 
 

@@ -1,0 +1,24 @@
+<form class="form" [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+
+  <!--  name-->
+  <mat-form-field class="example-full-width">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name">
+  </mat-form-field>
+  <div *ngIf="name && !name!.valid && (name?.dirty || name?.touched)" class="error">
+    <div *ngIf="name.errors?.['required']">Name is required</div>
+    <div *ngIf="name.errors?.['minlength']">The name must not be less than 3 or more then 20.</div>
+  </div>
+
+  <!--  price-->
+  <mat-form-field class="example-full-width">
+    <mat-label>Image</mat-label>
+    <input matInput formControlName="image">
+  </mat-form-field>
+  <div *ngIf="image && !image!.valid && (image?.dirty || image?.touched)" class="error">
+    <div *ngIf="image.errors?.['required']">Image is required</div>
+    <div *ngIf="image.errors?.['forbiddenUrl']">The url should be like https://example.jpeg</div>
+  </div>
+
+  <button mat-flat-button type="submit" [disabled]="categoryForm.invalid">Submit</button>
+</form>

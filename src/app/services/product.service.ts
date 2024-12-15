@@ -106,12 +106,12 @@ export class ProductsService {
 
         this.productsSignal.set(updatedProducts);
 
-        this.router.navigate([`${basePath}/products`]);
+        this.router.navigate([`${basePath}/products`])
 
         this.appLoadingService.setAlert({
           message: 'Product has been changed',
           severity: 'success',
-        });
+        })
       }
     );
   }

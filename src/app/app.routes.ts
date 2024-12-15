@@ -4,6 +4,7 @@ import {AddNewProductPageComponent} from './pages/add-new-product-page/add-new-p
 import {EditProductPageComponent} from './pages/edit-product-page/edit-product-page.component';
 import {UsersPageComponent} from './pages/users-page/users-page.component';
 import {CategoriesPageComponent} from './pages/categories-page/categories-page.component';
+import {AddNewCategoryPageComponent} from './pages/add-new-category-page/add-new-category-page.component';
 
 export const basePath = '/main'
 
@@ -18,6 +19,7 @@ export const routes: Routes = [
       {path: 'edit-product/:id', component: EditProductPageComponent},
       {path: 'users', component: UsersPageComponent},
       {path: 'categories', component: CategoriesPageComponent},
+      {path: 'add-new-category', component: AddNewCategoryPageComponent},
 
     ]
   }
