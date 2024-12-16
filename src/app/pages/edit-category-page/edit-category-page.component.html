@@ -1,1 +1,4 @@
-<p>edit-category-page works!</p>
+@if (category()) {
+  <app-category-form [isEditMode]="true" [categoryData]="category" (submitForm)="onFormSubmit($event)"></app-category-form>
+}
+

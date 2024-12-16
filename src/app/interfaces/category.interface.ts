@@ -7,6 +7,14 @@ export interface Category {
 }
 
 export interface ResponseCategory {
+  category: Category
+}
+
+export interface ResponseUpdateCategory {
+  updateCategory: Category
+}
+
+export interface ResponseCategories {
   categories: Category[]
 }
 
@@ -23,6 +31,11 @@ export interface ResponseDeleteCategory {
 }
 
 export interface CreateCategoryDto {
+  name: string,
+  image: string,
+}
+
+export interface UpdateCategoryDto {
   name: string,
   image: string,
 }

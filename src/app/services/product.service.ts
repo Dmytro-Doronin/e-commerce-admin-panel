@@ -102,7 +102,7 @@ export class ProductsService {
               images: updatedProductData.images,
             }
             : product
-        );
+        )
 
         this.productsSignal.set(updatedProducts);
 
@@ -113,7 +113,7 @@ export class ProductsService {
           severity: 'success',
         })
       }
-    );
+    )
   }
 
   getProduct(id: string) {

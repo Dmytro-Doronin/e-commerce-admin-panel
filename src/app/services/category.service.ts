@@ -1,20 +1,26 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {AppLoadingService} from './app-loading.service';
 
-import {ADD_NEW_CATEGORY, DELETE_CATEGORY, GET_CATEGORIES} from './graphQl-variables/categories-variables.graphql';
+import {
+  ADD_NEW_CATEGORY,
+  DELETE_CATEGORY,
+  GET_CATEGORIES,
+  GET_SINGLE_CATEGORY, UPDATE_CATEGORY
+} from './graphQl-variables/categories-variables.graphql';
 import {
   Category,
-  CreateCategoryDto,
+  CreateCategoryDto, ResponseCategories,
   ResponseCategory,
   ResponseCategoryForAdd,
-  ResponseDeleteCategory
+  ResponseDeleteCategory, ResponseUpdateCategory, UpdateCategoryDto
 } from '../interfaces/category.interface';
 import {keysForCategories} from '../mockData/keys';
 import {ApiService} from './api.service';
 import {Router} from '@angular/router';
 import {basePath} from '../app.routes';
-import {ResponseDeleteProduct} from '../interfaces/products.interface';
-import {DELETE_PRODUCT} from './graphQl-variables/products-variables.graphql';
+import {ResponseDeleteProduct, ResponseUpdateProduct, UpdateProductDto} from '../interfaces/products.interface';
+import {DELETE_PRODUCT, EDIT_PRODUCT} from './graphQl-variables/products-variables.graphql';
+import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 
 
 @Injectable({
@@ -27,11 +33,18 @@ export class CategoriesService {
   private router = inject(Router)
 
   private categoriesSignal = signal<Category[]>([])
+  private categorySignal = signal<Category | null>(null)
+
   private categoriesNamesSignal = signal<string[]>([])
   private categoriesTableHeadSignal = signal<string[]>([])
 
+
   get categories() {
     return this.categoriesSignal
+  }
+
+  get category() {
+    return this.categorySignal
   }
   get categoriesTableHead() {
     return this.categoriesTableHeadSignal
@@ -44,7 +57,7 @@ export class CategoriesService {
 
 
   loadAllCategories(isHeader = false, limit: number = 10) {
-    this.apiService.fetchData<ResponseCategory, never>(
+    this.apiService.fetchData<ResponseCategories, never>(
       GET_CATEGORIES,
       null,
       (data) => {
@@ -73,6 +86,46 @@ export class CategoriesService {
       (data) => {
         this.appLoadingService.setAlert({message: 'Category has been added', severity: 'success'})
         this.router.navigate([`${basePath}/categories`])
+      }
+    )
+  }
+
+  loadCategory(id: number) {
+    this.apiService.fetchData<ResponseCategory, { id: number }>(
+      GET_SINGLE_CATEGORY,
+      { id },
+      (data) => {
+        this.categorySignal.set(data.category)
+        // this.appLoadingService.setAlert({message: 'Category has been added', severity: 'success'})
+        // this.router.navigate([`${basePath}/categories`])
+      }
+    )
+  }
+
+  editCategory(id: number, data: UpdateCategoryDto) {
+    this.apiService.fetchMutation<ResponseUpdateCategory, { id: number, changes: Partial<UpdateCategoryDto> }>(
+      UPDATE_CATEGORY,
+      { id, changes: data },
+      (response) => {
+        const updatedCategoryData = response.updateCategory
+        const updatedCategories = this.categoriesSignal().map((category) =>
+          +category.id === id
+            ? {
+              ...category,
+              name: updatedCategoryData.name,
+              image: updatedCategoryData.image,
+            }
+            : category
+        )
+
+        this.categoriesSignal.set(updatedCategories);
+
+        this.router.navigate([`${basePath}/categories`])
+
+        this.appLoadingService.setAlert({
+          message: 'Category has been changed',
+          severity: 'success',
+        })
       }
     )
   }

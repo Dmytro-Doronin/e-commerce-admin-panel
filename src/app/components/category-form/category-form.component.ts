@@ -74,10 +74,10 @@ export class CategoryFormComponent implements OnInit {
       this.submit.emit(payload)
 
       //clear form
-      this.categoryForm.reset({
-        name: '',
-        image: '',
-      });
+      // this.categoryForm.reset({
+      //   name: '',
+      //   image: '',
+      // });
       Object.keys(this.categoryForm.controls).forEach((key) => {
         const control = this.categoryForm.get(key);
         control?.setErrors(null);
@@ -86,5 +86,4 @@ export class CategoryFormComponent implements OnInit {
       })
     }
   }
-
 }
