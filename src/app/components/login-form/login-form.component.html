@@ -1,0 +1,28 @@
+<mat-card appearance="outlined" class="mat-card">
+  <form class="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-card-content class="mat-content">
+      <h2 class="title">Login</h2>
+      <mat-form-field class="example-full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+      </mat-form-field>
+      <div *ngIf="email && !email!.valid && (email?.dirty || email?.touched)" class="error">
+        <div *ngIf="email.errors?.['required']">Email is required</div>
+        <div *ngIf="email.errors?.['minlength']">The email must not be less than 3 or more then 10.</div>
+      </div>
+
+
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password">
+      </mat-form-field>
+      <div *ngIf="password && !password!.valid && (password?.dirty || password?.touched)" class="error">
+        <div *ngIf="password.errors?.['required']">Password is required</div>
+        <div *ngIf="password.errors?.['minlength']">The password must not be less than 3 or more then 15.</div>
+      </div>
+      <button mat-flat-button type="submit" >Submit</button>
+    </mat-card-content>
+  </form>
+</mat-card>
+
+

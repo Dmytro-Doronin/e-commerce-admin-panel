@@ -6,8 +6,11 @@
     enabled-trigger-text-color: var(--color-dark-900),
     placeholder-text-color: var(--color-dark-900),
     focused-arrow-color: var(--color-dark-900),
-
   ));
 
+  @include mat.card-overrides((
+    subtitle-text-color: orange,
+    elevated-container-color: blue,
+  ));
 
 }

@@ -61,6 +61,23 @@ export class ProductFormComponent implements OnInit {
     ),
   })
 
+  get categoryIdField() {
+    return this.productForm.get('categoryId')
+  }
+
+  get title() {
+    return this.productForm.get('title')
+  }
+  get price() {
+    return this.productForm.get('price')
+  }
+  get description() {
+    return this.productForm.get('description')
+  }
+  get images() {
+    return this.productForm.get('images')
+  }
+
 
   ngOnInit() {
     const signal = this.productData()
@@ -86,33 +103,6 @@ export class ProductFormComponent implements OnInit {
     categoryIdControl?.markAsDirty();
     this.categoryId.set(categoryId)
   }
-
-  get categoryIdField() {
-    return this.productForm.get('categoryId')
-  }
-
-  get title() {
-    return this.productForm.get('title')
-  }
-  get price() {
-    return this.productForm.get('price')
-  }
-  get description() {
-    return this.productForm.get('description')
-  }
-  get images() {
-    return this.productForm.get('images')
-  }
-
-  // onImagesInput(value: string): void {
-  //   const sanitizedInput = value.replace(/^\[|]$/g, '').replace(/"/g, '');
-  //   const imageArray = sanitizedInput
-  //     .split(',')
-  //     .map((img) => img.trim())
-  //     .filter((img) => img);
-  //
-  //   this.productForm.get('images')?.setValue(imageArray);
-  // }
 
   onImagesInput(value: string): void {
     const imageArray = value

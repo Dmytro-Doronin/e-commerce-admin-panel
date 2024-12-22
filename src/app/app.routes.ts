@@ -6,11 +6,13 @@ import {UsersPageComponent} from './pages/users-page/users-page.component';
 import {CategoriesPageComponent} from './pages/categories-page/categories-page.component';
 import {AddNewCategoryPageComponent} from './pages/add-new-category-page/add-new-category-page.component';
 import {EditCategoryPageComponent} from './pages/edit-category-page/edit-category-page.component';
+import {AuthPageComponent} from './pages/auth-page/auth-page.component';
 
 export const basePath = '/main'
 
 export const routes: Routes = [
   { path: '', redirectTo: basePath, pathMatch: 'full' },
+  { path: 'auth', component: AuthPageComponent},
   {
     path: 'main',
     loadComponent: () => import('./layout/layout.component').then(c => c.LayoutComponent),
