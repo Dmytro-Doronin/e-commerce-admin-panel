@@ -17,6 +17,7 @@ export const routes: Routes = [
     path: 'main',
     loadComponent: () => import('./layout/layout.component').then(c => c.LayoutComponent),
     children: [
+      { path: '', redirectTo: 'products', pathMatch: 'full' },
       {path: 'products', component: ProductsPageComponent},
       {path: 'add-new-product', component: AddNewProductPageComponent},
       {path: 'edit-product/:id', component: EditProductPageComponent},
@@ -24,7 +25,6 @@ export const routes: Routes = [
       {path: 'categories', component: CategoriesPageComponent},
       {path: 'add-new-category', component: AddNewCategoryPageComponent},
       {path: 'edit-category/:id', component: EditCategoryPageComponent},
-
     ]
   }
   // { path: '**', component: ErrorPageComponent },
