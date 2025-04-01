@@ -1,6 +1,6 @@
 # 🛠️ E-Commerce Admin Panel (Angular 19)
 
-**E-Commerce Admin Panel** is a modern admin dashboard built with **Angular 19**, **Apollo Angular (GraphQL)**, and **Angular Material**. It is designed to manage the e-commerce platform [**E-Commerce**](https://https://github.com/Dmytro-Doronin/e-commerce-angular) — including product creation/editing, stock control, and more.
+**E-Commerce Admin Panel** is a modern admin dashboard built with **Angular 19**, **Apollo Angular (GraphQL)**, and **Angular Material**. It is designed to manage the e-commerce platform [**E-Commerce**](https://github.com/Dmytro-Doronin/e-commerce-angular) — including product creation/editing, stock control, and more.
 
 This panel is optimized for performance using **Standalone Components**, GraphQL queries and mutations, and responsive UI with Angular Material.
 
