@@ -51,7 +51,6 @@ export class ProductsPageComponent implements OnInit {
   productsTittles: Signal<string[]> = this.productService.tableHeads
   productsCount: Signal<number> = this.productService.countProducts
   categories: Signal<string[]> = this.categoriesService.categoriesNames
-  // categories: Signal<string[]> = this.productService.categories
 
   limit = 10
   private offset = 0
@@ -60,7 +59,6 @@ export class ProductsPageComponent implements OnInit {
   constructor() {
     effect(() => {
       const currentProducts = this.products()
-      console.log('Updated products:', currentProducts)
     })
   }
 
